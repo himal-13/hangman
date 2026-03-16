@@ -14,4 +14,17 @@ class Subject {
     required this.words,
     required this.color,
   });
+
+  // Helper method to get current word based on progress
+  String getCurrentWord(int currentIndex) {
+    if (currentIndex >= 0 && currentIndex < words.length) {
+      return words[currentIndex];
+    }
+    return words.first;
+  }
+
+  // Check if all words are completed
+  bool isComplete(List<String> completedWords) {
+    return completedWords.length >= words.length;
+  }
 }

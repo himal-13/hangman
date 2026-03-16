@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hangman/services/game_progress.dart';
+import 'package:provider/provider.dart';
 import 'package:hangman/data/subject.dart';
 import '../models/subject.dart';
 import 'game_screen.dart';
@@ -28,6 +30,13 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () => _showResetDialog(context),
+            tooltip: 'Reset All Progress',
+          ),
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -49,12 +58,25 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Test your vocabulary!',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
+            Consumer<GameProgressProvider>(
+              builder: (context, progress, child) {
+                final totalCompleted = SubjectsData.subjects.fold<int>(
+                  0,
+                  (sum, subject) => sum + progress.getCompletedWords(subject.id).length,
+                );
+                final totalWords = SubjectsData.subjects.fold<int>(
+                  0,
+                  (sum, subject) => sum + subject.words.length,
+                );
+                
+                return Text(
+                  'Overall Progress: $totalCompleted/$totalWords words',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 20),
             Expanded(
@@ -69,7 +91,22 @@ class HomeScreen extends StatelessWidget {
                 itemCount: SubjectsData.subjects.length,
                 itemBuilder: (context, index) {
                   final subject = SubjectsData.subjects[index];
-                  return SubjectCard(subject: subject);
+                  return Consumer<GameProgressProvider>(
+                    builder: (context, progress, child) {
+                      return SubjectCard(
+                        subject: subject,
+                        progress: progress.getProgressPercentage(
+                          subject.id, 
+                          subject.words.length
+                        ),
+                        completedCount: progress.getCompletedWords(subject.id).length,
+                        isCompleted: progress.isSubjectCompleted(
+                          subject.id, 
+                          subject.words.length
+                        ),
+                      );
+                    },
+                  );
                 },
               ),
             ),
@@ -78,67 +115,148 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+
+  void _showResetDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Reset All Progress'),
+          content: const Text('Are you sure you want to reset all game progress?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Provider.of<GameProgressProvider>(context, listen: false)
+                    .resetAllProgress();
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'Reset',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 class SubjectCard extends StatelessWidget {
   final Subject subject;
+  final double progress;
+  final int completedCount;
+  final bool isCompleted;
 
-  const SubjectCard({super.key, required this.subject});
+  const SubjectCard({
+    super.key,
+    required this.subject,
+    required this.progress,
+    required this.completedCount,
+    required this.isCompleted,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => GameScreen(subject: subject),
-          ),
-        );
+        if (!isCompleted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GameScreen(subject: subject),
+            ),
+          );
+        }
       },
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              subject.color.withOpacity(0.7),
-              subject.color,
-            ],
+            colors: isCompleted
+                ? [Colors.grey.shade400, Colors.grey.shade600]
+                : [
+                    subject.color.withOpacity(0.7),
+                    subject.color,
+                  ],
           ),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: subject.color.withOpacity(0.3),
+              color: isCompleted 
+                  ? Colors.grey.withOpacity(0.3)
+                  : subject.color.withOpacity(0.3),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
           ],
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
           children: [
-            Text(
-              subject.icon,
-              style: const TextStyle(fontSize: 48),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              subject.name,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+            Container(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    subject.icon,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 48),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    subject.name,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  // Text(
+                  //   '$completedCount/${subject.words.length} words',
+                  //   style: const TextStyle(
+                  //     fontSize: 14,
+                  //     color: Colors.white70,
+                  //   ),
+                  // ),
+                  // Progress bar
+                  // Container(
+                  //   width: 100,
+                  //   height: 4,
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.white.withOpacity(0.3),
+                  //     borderRadius: BorderRadius.circular(2),
+                  //   ),
+                  //   child: FractionallySizedBox(
+                  //     alignment: Alignment.centerLeft,
+                  //     widthFactor: progress,
+                  //     child: Container(
+                  //       decoration: BoxDecoration(
+                  //         color: Colors.white,
+                  //         borderRadius: BorderRadius.circular(2),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                ],
               ),
             ),
-            const SizedBox(height: 5),
-            Text(
-              '${subject.words.length} words',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.white70,
+            if (isCompleted)
+              const Positioned(
+                top: 10,
+                right: 10,
+                child: Icon(
+                  Icons.check_circle,
+                  color: Colors.white,
+                  size: 30,
+                ),
               ),
-            ),
           ],
         ),
       ),
