@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/services/game_progress.dart';
 import 'package:hangman/services/game_setting.dart';
+import 'package:hangman/audio/audio_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:hangman/components/hangman_drawing.dart';
 import '../models/subject.dart';
@@ -86,14 +87,17 @@ class _GameScreenState extends State<GameScreen> {
       
       if (_currentWord.toUpperCase().contains(letter)) {
         _gameState.guessedLetters.add(letter);
+        AudioManager.instance.playCorrect();
         if (_gameState.isWordGuessed) {
           _gameWon = true;
           _handleWordCompletion();
         }
       } else {
         _gameState.wrongAttempts++;
+        AudioManager.instance.playWrong();
         if (_gameState.isGameOver) {
           _gameOver = true;
+          AudioManager.instance.playLose();
           _showGameOverDialog();
         }
       }
@@ -158,6 +162,9 @@ class _GameScreenState extends State<GameScreen> {
     
     // Mark word as completed
     await progressProvider.markWordAsCompleted(widget.subject.id, _currentWord);
+    
+    // Play win sound
+    AudioManager.instance.playWin();
     
     // Check if this was the last word in the subject
     final completedWords = progressProvider.getCompletedWords(widget.subject.id);
@@ -756,6 +763,7 @@ class _GameScreenState extends State<GameScreen> {
                     child: HangmanDrawing(
                       wrongAttempts: _gameState.wrongAttempts,
                       maxAttempts: _maxAttempts,
+                      subjectColor: widget.subject.color,
                     ),
                   ),
                 ),
