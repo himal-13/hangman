@@ -4,6 +4,7 @@ import 'package:hangman/services/game_setting.dart';
 import 'package:hangman/audio/audio_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:hangman/components/hangman_drawing.dart';
+import 'package:hangman/services/admob_service.dart';
 import '../models/subject.dart';
 
 class GameScreen extends StatefulWidget {
@@ -30,6 +31,7 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     super.initState();
     _loadGame();
+    AdService().loadRewardedAd();
   }
 
   Future<void> _loadGame() async {
@@ -106,17 +108,6 @@ class _GameScreenState extends State<GameScreen> {
 
   void _useHint() {
     final settingsProvider = Provider.of<GameSettingsProvider>(context, listen: false);
-    
-    if (!settingsProvider.canUseHint(widget.subject.id, _currentWord)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('No hints left for this word!'),
-          backgroundColor: Colors.red.shade400,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-      return;
-    }
 
     // Find unguessed letters
     final wordLetters = _currentWord.toUpperCase().split('');
@@ -135,6 +126,82 @@ class _GameScreenState extends State<GameScreen> {
       return;
     }
 
+    if (settingsProvider.availableHints <= 0) {
+      _showOutOfHintsDialog();
+      return;
+    }
+
+    // Deduct a hint
+    settingsProvider.useHint();
+    _giveHint(unguessedLetters, settingsProvider);
+  }
+
+  void _showOutOfHintsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('💡 Out of Hints!'),
+          content: const Text('Watch a short ad to earn 3 more hints!'),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text('Cancel', style: TextStyle(color: Colors.grey.shade600)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: widget.subject.color,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(dialogContext).pop(); // Dismiss dialog
+                _showRewardedAdForHints();
+              },
+              child: const Text('Watch Ad', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showRewardedAdForHints() {
+    final adService = AdService();
+    if (!adService.isRewardedAdReady) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Ad not ready yet. Please try again in a moment!'),
+        ),
+      );
+      adService.loadRewardedAd();
+      return;
+    }
+
+    adService.showRewardedAd(
+      onUserEarnedReward: () {
+        final settingsProvider = Provider.of<GameSettingsProvider>(context, listen: false);
+        settingsProvider.addHints(3); // Reward player with 3 hints
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('🎉 You earned 3 hints!'),
+            backgroundColor: Colors.green.shade600,
+          ),
+        );
+      },
+      onAdFailed: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to show ad.'),
+          ),
+        );
+      },
+    );
+  }
+
+  void _giveHint(List<String> unguessedLetters, GameSettingsProvider settingsProvider) {
     // Pick a random unguessed letter
     final hintLetter = unguessedLetters[
       DateTime.now().millisecondsSinceEpoch % unguessedLetters.length
@@ -143,13 +210,10 @@ class _GameScreenState extends State<GameScreen> {
     // Automatically guess that letter
     _guessLetter(hintLetter);
 
-    // Increment hint counter
-    settingsProvider.incrementHintUsed(widget.subject.id, _currentWord);
-
     // Show hint message
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('💡 Hint: Try the letter "$hintLetter"'),
+        content: Text('💡 Hint: Confirmed "$hintLetter"'),
         backgroundColor: Colors.amber.shade700,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 2),
@@ -664,46 +728,6 @@ class _GameScreenState extends State<GameScreen> {
           backgroundColor: widget.subject.color,
           elevation: 0,
           actions: [
-            // Hint button
-            Consumer<GameSettingsProvider>(
-              builder: (context, settings, child) {
-                final hintsUsed = settings.getHintsUsed(widget.subject.id, _currentWord);
-                final maxHints = settings.maxHints;
-                final canUseHint = settings.canUseHint(widget.subject.id, _currentWord);
-                
-                return Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.lightbulb_outline),
-                      onPressed: canUseHint && !_gameOver && !_gameWon ? _useHint : null,
-                      tooltip: 'Use Hint',
-                      color: canUseHint ? Colors.amber : Colors.grey,
-                    ),
-                    if (hintsUsed > 0)
-                      Positioned(
-                        right: 2,
-                        top: 2,
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Text(
-                            '$hintsUsed/$maxHints',
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.amber.shade800,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                );
-              },
-            ),
             // Word counter
             Center(
               child: Container(
@@ -844,7 +868,7 @@ class _GameScreenState extends State<GameScreen> {
                 flex: 2,
                 child: Container(
                   margin: const EdgeInsets.fromLTRB(8, 4, 8, 8),
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
@@ -856,10 +880,77 @@ class _GameScreenState extends State<GameScreen> {
                       ),
                     ],
                   ),
-                  child: Keyboard(
-                    onLetterSelected: _guessLetter,
-                    usedLetters: _usedLetters,
-                    subjectColor: widget.subject.color,
+                  child: Column(
+                    children: [
+                      // Hint and Next Buttons Header
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Hint Button
+                            Consumer<GameSettingsProvider>(
+                              builder: (context, settings, child) {
+                                final availableHints = settings.availableHints;
+                                
+                                return ElevatedButton.icon(
+                                  onPressed: !_gameOver && !_gameWon ? _useHint : null,
+                                  icon: const Icon(Icons.lightbulb, size: 18),
+                                  label: Text(
+                                    'Hint ($availableHints)',
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.amber.shade500,
+                                    foregroundColor: Colors.white,
+                                    disabledBackgroundColor: Colors.grey.shade300,
+                                    elevation: 2,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  ),
+                                );
+                              },
+                            ),
+                            
+                            // Next Button
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                if (_currentWordIndex < _words.length - 1) {
+                                  _nextWord();
+                                } else {
+                                  _showGameCompleteDialog();
+                                }
+                              },
+                              icon: const Icon(Icons.skip_next_rounded, size: 20),
+                              label: Text(
+                                _currentWordIndex < _words.length - 1 ? 'Next' : 'Finish',
+                                style: const TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: widget.subject.color,
+                                foregroundColor: Colors.white,
+                                elevation: 2,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      
+                      // Actual Keyboard
+                      Expanded(
+                        child: Keyboard(
+                          onLetterSelected: _guessLetter,
+                          usedLetters: _usedLetters,
+                          subjectColor: widget.subject.color,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

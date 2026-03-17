@@ -3,37 +3,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hangman/audio/audio_manager.dart';
 
 class GameSettingsProvider extends ChangeNotifier {
-  static const String _hintsUsedKeyPrefix = 'hints_used_';
+  static const String _availableHintsKey = 'available_hints';
   static const String _soundMutedKey = 'sound_muted';
-  static const String _maxHintsKey = 'max_hints';
 
-  final Map<String, int> _hintsUsed = {};
+  int _availableHints = 3; // Provide 3 initial free hints
   bool _soundMuted = false;
-  int _maxHints = 3;
 
+  int get availableHints => _availableHints;
   bool get isSoundMuted => _soundMuted;
-  int get maxHints => _maxHints;
 
   GameSettingsProvider() {
     loadSettings();
   }
   
-  int getHintsUsed(String subjectId, String word) {
-    return _hintsUsed['${subjectId}_$word'] ?? 0;
-  }
-  
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    final hintKeys = prefs.getKeys().where((key) => key.startsWith(_hintsUsedKeyPrefix));
 
-    for (var key in hintKeys) {
-      final id = key.substring(_hintsUsedKeyPrefix.length);
-      _hintsUsed[id] = prefs.getInt(key) ?? 0;
-    }
-
-    // Load other saved settings.
+    _availableHints = prefs.getInt(_availableHintsKey) ?? 3;
     _soundMuted = prefs.getBool(_soundMutedKey) ?? false;
-    _maxHints = prefs.getInt(_maxHintsKey) ?? 3;
 
     // Keep audio manager in sync with saved sound setting.
     AudioManager.instance.setMuted(_soundMuted);
@@ -41,15 +28,19 @@ class GameSettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
   
-  Future<void> incrementHintUsed(String subjectId, String word) async {
-    final key = '${subjectId}_$word';
-    final current = getHintsUsed(subjectId, word);
-    final newValue = current + 1;
+  Future<void> useHint() async {
+    if (_availableHints > 0) {
+      _availableHints--;
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_availableHintsKey, _availableHints);
+      notifyListeners();
+    }
+  }
 
+  Future<void> addHints(int count) async {
+    _availableHints += count;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_hintsUsedKeyPrefix + key, newValue);
-
-    _hintsUsed[key] = newValue;
+    await prefs.setInt(_availableHintsKey, _availableHints);
     notifyListeners();
   }
 
@@ -60,29 +51,5 @@ class GameSettingsProvider extends ChangeNotifier {
     _soundMuted = muted;
     AudioManager.instance.setMuted(muted);
     notifyListeners();
-  }
-
-  Future<void> setMaxHints(int maxHints) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_maxHintsKey, maxHints);
-
-    _maxHints = maxHints;
-    notifyListeners();
-  }
-
-  Future<void> resetHintUsage() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final hintKeys = prefs.getKeys().where((key) => key.startsWith(_hintsUsedKeyPrefix));
-    for (var key in hintKeys) {
-      await prefs.remove(key);
-    }
-
-    _hintsUsed.clear();
-    notifyListeners();
-  }
-
-  bool canUseHint(String subjectId, String word) {
-    return getHintsUsed(subjectId, word) < _maxHints;
   }
 }
