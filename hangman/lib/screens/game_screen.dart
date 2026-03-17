@@ -668,7 +668,7 @@ class _GameScreenState extends State<GameScreen> {
             Consumer<GameSettingsProvider>(
               builder: (context, settings, child) {
                 final hintsUsed = settings.getHintsUsed(widget.subject.id, _currentWord);
-                final maxHints = settings.getMaxHints();
+                final maxHints = settings.maxHints;
                 final canUseHint = settings.canUseHint(widget.subject.id, _currentWord);
                 
                 return Stack(

@@ -28,7 +28,12 @@ class AudioManager {
     ]);
   }
 
-  void toggleMute() => _muted = !_muted;
+  void toggleMute() => setMuted(!_muted);
+
+  /// Sets whether audio should be muted.
+  void setMuted(bool muted) {
+    _muted = muted;
+  }
 
   void _play(String file) {
     if (_muted) return;
