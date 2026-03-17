@@ -6,7 +6,7 @@ class GameSettingsProvider extends ChangeNotifier {
   static const String _availableHintsKey = 'available_hints';
   static const String _soundMutedKey = 'sound_muted';
 
-  int _availableHints = 3; // Provide 3 initial free hints
+  int _availableHints = 1; // Provide 3 initial free hints
   bool _soundMuted = false;
 
   int get availableHints => _availableHints;
