@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:hangman/data/subject.dart';
 import '../models/subject.dart';
 import 'game_screen.dart';
-import 'sentence_game_screen.dart';
 import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,15 +15,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
-    final List<Widget> pages = [
-      const ClassicModeView(),
-      const SentenceModeView(),
-    ];
-
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -45,17 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildSettingsButton(context),
         ],
       ),
-      body: pages[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        selectedItemColor: const Color(0xFF1E293B),
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.apps), label: 'Classic'),
-          BottomNavigationBarItem(icon: Icon(Icons.short_text), label: 'Sentences'),
-        ],
-      ),
+      body: const ClassicModeView(),
     );
   }
 
@@ -203,7 +185,6 @@ class ClassicModeView extends StatelessWidget {
               completedCount: progress.getCompletedWords(subject.id).length,
               isCompleted: progress.isSubjectCompleted(subject.id, subject.words.length),
               difficultyColor: color,
-              isSentenceMode: false,
             );
           },
         ),
@@ -236,63 +217,11 @@ class ClassicModeView extends StatelessWidget {
   }
 }
 
-class SentenceModeView extends StatelessWidget {
-  const SentenceModeView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<GameProgressProvider>(
-      builder: (context, progress, child) {
-        return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const DailyHintClaimCard(),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text('New Challenge! 🧠', style: TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w500)),
-                    SizedBox(height: 4),
-                    Text('Sentence Mode', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
-                    Text('Some letters are already revealed!', style: TextStyle(color: Colors.grey)),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 1.2, crossAxisSpacing: 12, mainAxisSpacing: 12),
-                itemCount: SubjectsData.sentenceSubjects.length,
-                itemBuilder: (context, index) {
-                  final subject = SubjectsData.sentenceSubjects[index];
-                  return SubjectCard(
-                    subject: subject,
-                    completedCount: progress.getCompletedWords(subject.id).length,
-                    isCompleted: progress.isSubjectCompleted(subject.id, subject.words.length),
-                    difficultyColor: subject.color,
-                    isSentenceMode: true,
-                  );
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
 class SubjectCard extends StatelessWidget {
   final Subject subject;
   final int completedCount;
   final bool isCompleted;
   final Color difficultyColor;
-  final bool isSentenceMode;
 
   const SubjectCard({
     super.key,
@@ -300,7 +229,6 @@ class SubjectCard extends StatelessWidget {
     required this.completedCount,
     required this.isCompleted,
     required this.difficultyColor,
-    required this.isSentenceMode,
   });
 
   @override
@@ -310,9 +238,7 @@ class SubjectCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => isSentenceMode 
-                ? SentenceGameScreen(subject: subject)
-                : GameScreen(subject: subject),
+            builder: (context) => GameScreen(subject: subject),
           ),
         );
       },
