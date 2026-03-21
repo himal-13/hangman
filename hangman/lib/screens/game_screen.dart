@@ -4,7 +4,6 @@ import 'package:hangman/services/game_setting.dart';
 import 'package:hangman/audio/audio_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:hangman/components/hangman_drawing.dart';
-import 'package:hangman/services/admob_service.dart';
 import '../models/subject.dart';
 
 class GameScreen extends StatefulWidget {
@@ -31,7 +30,6 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     super.initState();
     _loadGame();
-    AdManager().loadRewardedAd();
   }
 
   Future<void> _loadGame() async {
@@ -127,7 +125,12 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     if (settingsProvider.availableHints <= 0) {
-      _showOutOfHintsDialog();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Out of hints! Claim daily hints on the home screen.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
       return;
     }
 
@@ -136,70 +139,6 @@ class _GameScreenState extends State<GameScreen> {
     _giveHint(unguessedLetters, settingsProvider);
   }
 
-  void _showOutOfHintsDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('💡 Out of Hints!'),
-          content: const Text('Watch a short ad to earn 3 more hints!'),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text('Cancel', style: TextStyle(color: Colors.grey.shade600)),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: widget.subject.color,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(dialogContext).pop(); // Dismiss dialog
-                _showRewardedAdForHints();
-              },
-              child: const Text('Watch Ad', style: TextStyle(color: Colors.white)),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showRewardedAdForHints() {
-    final adService = AdManager();
-    if (!adService.isRewardedReady) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Ad not ready yet. Please try again in a moment!'),
-        ),
-      );
-      adService.loadRewardedAd();
-      return;
-    }
-
-    adService.showRewardedAd(
-      onUserEarnedReward: () {
-        final settingsProvider = Provider.of<GameSettingsProvider>(context, listen: false);
-        settingsProvider.addHints(3); // Reward player with 3 hints
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('🎉 You earned 3 hints!'),
-            backgroundColor: Colors.green.shade600,
-          ),
-        );
-      },
-      onAdFailedToShow: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to show ad.'),
-          ),
-        );
-      },
-    );
-  }
 
   void _giveHint(List<String> unguessedLetters, GameSettingsProvider settingsProvider) {
     // Pick a random unguessed letter
@@ -483,21 +422,7 @@ class _GameScreenState extends State<GameScreen> {
                 ),
                 
                 const SizedBox(height: 15),
-                
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                  child: Text(
-                    'The word was: ${_currentWord.toUpperCase()}',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white.withOpacity(0.9),
-                    ),
-                  ),
-                ),
-                
-                const SizedBox(height: 15),
-                
+                                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -914,19 +839,15 @@ class _GameScreenState extends State<GameScreen> {
                               },
                             ),
                             
-                            // Next Button
+                            // Restart Button
                             ElevatedButton.icon(
                               onPressed: () {
-                                if (_currentWordIndex < _words.length - 1) {
-                                  _nextWord();
-                                } else {
-                                  _showGameCompleteDialog();
-                                }
+                                _initializeGame();
                               },
-                              icon: const Icon(Icons.skip_next_rounded, size: 20),
-                              label: Text(
-                                _currentWordIndex < _words.length - 1 ? 'Next' : 'Finish',
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                              icon: const Icon(Icons.play_arrow_rounded, size: 20),
+                              label: const Text(
+                                'Restart',
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: widget.subject.color,

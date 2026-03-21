@@ -140,9 +140,34 @@ class SubjectsData {
     ),
   ];
 
+  // Sentence Mode Data
+  static List<Subject> sentenceSubjects = [
+    Subject(
+      id: 'proverbs',
+      name: 'Proverbs',
+      icon: '📖',
+      words: ['PRACTICE MAKES PERFECT', 'KNOWLEDGE IS POWER', 'TIME IS MONEY', 'HONESTY IS THE BEST POLICY'],
+      color: Colors.indigo,
+    ),
+    Subject(
+      id: 'quotes',
+      name: 'Famous Quotes',
+      icon: '💬',
+      words: ['BE THE CHANGE', 'STAY HUNGRY STAY FOOLISH', 'I THINK THEREFORE I AM', 'TO BE OR NOT TO BE'],
+      color: Colors.deepPurple,
+    ),
+    Subject(
+      id: 'common_phrases',
+      name: 'Common Phrases',
+      icon: '🗣️',
+      words: ['PIECE OF CAKE', 'BREAK A LEG', 'BETTER LATE THAN NEVER', 'ONCE IN A BLUE MOON'],
+      color: Colors.blueGrey,
+    ),
+  ];
+
   // Helper method to get all subjects (if needed)
   static List<Subject> getAllSubjects() {
-    return [...easySubjects, ...mediumSubjects, ...hardSubjects];
+    return [...easySubjects, ...mediumSubjects, ...hardSubjects, ...sentenceSubjects];
   }
 
   static Subject getSubjectById(String id) {

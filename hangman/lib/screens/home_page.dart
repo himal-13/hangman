@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/services/game_progress.dart';
+import 'package:hangman/services/game_setting.dart';
 import 'package:provider/provider.dart';
 import 'package:hangman/data/subject.dart';
 import '../models/subject.dart';
 import 'game_screen.dart';
+import 'sentence_game_screen.dart';
 import 'settings_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
+    final List<Widget> pages = [
+      const ClassicModeView(),
+      const SentenceModeView(),
+    ];
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -26,193 +40,249 @@ class HomeScreen extends StatelessWidget {
             color: Color(0xFF1E293B),
           ),
         ),
-        centerTitle: false,
         actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.settings_outlined, size: 24, color: Color(0xFF475569)),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SettingsScreen(),
-                  ),
-                );
-              },
-              tooltip: 'Settings',
-            ),
-          ),
+          _buildHintCounter(),
+          _buildSettingsButton(context),
         ],
       ),
-      body: Consumer<GameProgressProvider>(
-        builder: (context, progress, child) {
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 8),
-                
-                // Welcome Header
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Welcome back! 👋',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        'Choose your challenge',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF1E293B),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                
-                const SizedBox(height: 24),
-                
-                // Easy Mode Section
-                _buildDifficultySection(
-                  context: context,
-                  title: 'Easy',
-                  subtitle: 'Perfect for beginners',
-                  icon: Icons.emoji_emotions_outlined,
-                  color: Colors.green,
-                  subjects: SubjectsData.easySubjects,
-                  progress: progress,
-                ),
-                
-                // Medium Mode Section
-                _buildDifficultySection(
-                  context: context,
-                  title: 'Medium',
-                  subtitle: 'Getting challenging',
-                  icon: Icons.emoji_objects_outlined,
-                  color: Colors.orange,
-                  subjects: SubjectsData.mediumSubjects,
-                  progress: progress,
-                ),
-                
-                // Hard Mode Section
-                _buildDifficultySection(
-                  context: context,
-                  title: 'Hard',
-                  subtitle: 'For word masters',
-                  icon: Icons.psychology_outlined,
-                  color: Colors.red,
-                  subjects: SubjectsData.hardSubjects,
-                  progress: progress,
-                ),
-                
-                const SizedBox(height: 20),
-              ],
-            ),
-          );
-        },
+      body: pages[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
+        selectedItemColor: const Color(0xFF1E293B),
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.apps), label: 'Classic'),
+          BottomNavigationBarItem(icon: Icon(Icons.short_text), label: 'Sentences'),
+        ],
       ),
     );
   }
 
-  Widget _buildDifficultySection({
-    required BuildContext context,
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required Color color,
-    required List<Subject> subjects,
-    required GameProgressProvider progress,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+  Widget _buildHintCounter() {
+    return Consumer<GameSettingsProvider>(
+      builder: (context, settings, _) => Container(
+        margin: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          color: Colors.amber.shade100,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.lightbulb, size: 16, color: Colors.amber),
+            const SizedBox(width: 4),
+            Text(
+              '${settings.availableHints}',
+              style: TextStyle(color: Colors.amber.shade900, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSettingsButton(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(right: 8, top: 10, bottom: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 8, offset: const Offset(0, 2))],
+      ),
+      child: IconButton(
+        icon: const Icon(Icons.settings_outlined, size: 24, color: Color(0xFF475569)),
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen())),
+      ),
+    );
+  }
+}
+
+class DailyHintClaimCard extends StatelessWidget {
+  const DailyHintClaimCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<GameSettingsProvider>(
+      builder: (context, settings, child) {
+        if (!settings.canClaimDailyHints) return const SizedBox.shrink();
+
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [Colors.amber.shade400, Colors.orange.shade600]),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [BoxShadow(color: Colors.orange.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))],
+          ),
           child: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
+              const Icon(Icons.lightbulb, size: 40, color: Colors.white),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text('Daily Reward!', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text('Claim your 5 free hints for today', style: TextStyle(color: Colors.white, fontSize: 13)),
+                  ],
                 ),
-                child: Icon(icon, color: color, size: 20),
               ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF1E293B),
-                    ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[600],
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
+              ElevatedButton(
+                onPressed: () => settings.claimDailyHints(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.orange,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text('Claim'),
               ),
             ],
           ),
-        ),
+        );
+      },
+    );
+  }
+}
+
+class ClassicModeView extends StatelessWidget {
+  const ClassicModeView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<GameProgressProvider>(
+      builder: (context, progress, child) {
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const DailyHintClaimCard(),
+              const SizedBox(height: 8),
+              _buildSectionHeader('Welcome back! 👋', 'Choose your challenge'),
+              const SizedBox(height: 24),
+              _buildDifficultySection(context, 'Easy', 'Perfect for beginners', Icons.emoji_emotions_outlined, Colors.green, SubjectsData.easySubjects, progress),
+              _buildDifficultySection(context, 'Medium', 'Getting challenging', Icons.emoji_objects_outlined, Colors.orange, SubjectsData.mediumSubjects, progress),
+              _buildDifficultySection(context, 'Hard', 'For word masters', Icons.psychology_outlined, Colors.red, SubjectsData.hardSubjects, progress),
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildSectionHeader(String greeting, String subtitle) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(greeting, style: TextStyle(fontSize: 16, color: Colors.grey[600], fontWeight: FontWeight.w500)),
+          const SizedBox(height: 4),
+          Text(subtitle, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDifficultySection(BuildContext context, String title, String subtitle, IconData icon, Color color, List<Subject> subjects, GameProgressProvider progress) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildDifficultyHeader(title, subtitle, icon, color),
         GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 1.2,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-          ),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 1.2, crossAxisSpacing: 12, mainAxisSpacing: 12),
           itemCount: subjects.length,
           itemBuilder: (context, index) {
             final subject = subjects[index];
-            final completedCount = progress.getCompletedWords(subject.id).length;
-            final isCompleted = progress.isSubjectCompleted(
-              subject.id, 
-              subject.words.length
-            );
-            
             return SubjectCard(
               subject: subject,
-              completedCount: completedCount,
-              isCompleted: isCompleted,
+              completedCount: progress.getCompletedWords(subject.id).length,
+              isCompleted: progress.isSubjectCompleted(subject.id, subject.words.length),
               difficultyColor: color,
+              isSentenceMode: false,
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
       ],
+    );
+  }
+
+  Widget _buildDifficultyHeader(String title, String subtitle, IconData icon, Color color) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+            child: Icon(icon, color: color, size: 20),
+          ),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
+              Text(subtitle, style: TextStyle(fontSize: 13, color: Colors.grey[600])),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SentenceModeView extends StatelessWidget {
+  const SentenceModeView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<GameProgressProvider>(
+      builder: (context, progress, child) {
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const DailyHintClaimCard(),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text('New Challenge! 🧠', style: TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w500)),
+                    SizedBox(height: 4),
+                    Text('Sentence Mode', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
+                    Text('Some letters are already revealed!', style: TextStyle(color: Colors.grey)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 1.2, crossAxisSpacing: 12, mainAxisSpacing: 12),
+                itemCount: SubjectsData.sentenceSubjects.length,
+                itemBuilder: (context, index) {
+                  final subject = SubjectsData.sentenceSubjects[index];
+                  return SubjectCard(
+                    subject: subject,
+                    completedCount: progress.getCompletedWords(subject.id).length,
+                    isCompleted: progress.isSubjectCompleted(subject.id, subject.words.length),
+                    difficultyColor: subject.color,
+                    isSentenceMode: true,
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -222,6 +292,7 @@ class SubjectCard extends StatelessWidget {
   final int completedCount;
   final bool isCompleted;
   final Color difficultyColor;
+  final bool isSentenceMode;
 
   const SubjectCard({
     super.key,
@@ -229,44 +300,33 @@ class SubjectCard extends StatelessWidget {
     required this.completedCount,
     required this.isCompleted,
     required this.difficultyColor,
+    required this.isSentenceMode,
   });
 
   @override
   Widget build(BuildContext context) {
-    
     return GestureDetector(
       onTap: isCompleted ? null : () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => GameScreen(subject: subject),
+            builder: (context) => isSentenceMode 
+                ? SentenceGameScreen(subject: subject)
+                : GameScreen(subject: subject),
           ),
         );
       },
       child: Container(
         decoration: BoxDecoration(
-          gradient: isCompleted
-              ? LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Colors.grey.shade400, Colors.grey.shade600],
-                )
-              : LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    subject.color.withOpacity(0.8),
-                    subject.color,
-                  ],
-                ),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: isCompleted 
+                ? [Colors.grey.shade400, Colors.grey.shade600]
+                : [subject.color.withOpacity(0.8), subject.color],
+          ),
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: (isCompleted ? Colors.grey : difficultyColor).withOpacity(0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          boxShadow: [BoxShadow(color: (isCompleted ? Colors.grey : difficultyColor).withOpacity(0.2), blurRadius: 8, offset: const Offset(0, 4))],
         ),
         child: Stack(
           children: [
@@ -275,56 +335,18 @@ class SubjectCard extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Subject Icon
                   Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Center(
-                      child: Text(
-                        subject.icon,
-                        style: const TextStyle(
-                          fontSize: 30,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                    width: 60, height: 60,
+                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(20)),
+                    child: Center(child: Text(subject.icon, style: const TextStyle(fontSize: 30))),
                   ),
                   const SizedBox(height: 12),
-                  
-                  // Subject Name
-                  Text(
-                    subject.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  
-                  
-                 
+                  Text(subject.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white), textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
                 ],
               ),
             ),
-            
-            // Completed Check Icon
             if (isCompleted)
-              const Positioned(
-                top: 12,
-                right: 12,
-                child: Icon(
-                  Icons.check_circle,
-                  color: Colors.white,
-                  size: 20,
-                ),
-              ),
+              const Positioned(top: 12, right: 12, child: Icon(Icons.check_circle, color: Colors.white, size: 20)),
           ],
         ),
       ),
