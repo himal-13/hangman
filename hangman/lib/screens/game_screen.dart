@@ -31,7 +31,7 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     super.initState();
     _loadGame();
-    AdService().loadRewardedAd();
+    AdManager().loadRewardedAd();
   }
 
   Future<void> _loadGame() async {
@@ -169,8 +169,8 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _showRewardedAdForHints() {
-    final adService = AdService();
-    if (!adService.isRewardedAdReady) {
+    final adService = AdManager();
+    if (!adService.isRewardedReady) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Ad not ready yet. Please try again in a moment!'),
@@ -191,7 +191,7 @@ class _GameScreenState extends State<GameScreen> {
           ),
         );
       },
-      onAdFailed: () {
+      onAdFailedToShow: () {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Failed to show ad.'),

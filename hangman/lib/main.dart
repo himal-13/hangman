@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/screens/home_page.dart';
+import 'package:hangman/services/admob_service.dart';
 import 'package:hangman/services/game_progress.dart';
 import 'package:hangman/services/game_setting.dart';
 import 'package:hangman/audio/audio_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:hangman/services/admob_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   // Initialize AdMob
   await MobileAds.instance.initialize();
-  
+ final adManager = AdManager();
+  adManager.initialize();
+  adManager.loadRewardedAd();
   // Preload audio files
   await AudioManager.instance.preload();
   
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
        providers: [
         ChangeNotifierProvider(create: (_) => GameProgressProvider()),
         ChangeNotifierProvider(create: (_) => GameSettingsProvider()),
-        Provider(create: (_) => AdService()..loadRewardedAd()),
+        // Provider(create: (_) => AdManager()..initialize()),
       ],
       child: MaterialApp(
         title: 'Subject Hangman',
