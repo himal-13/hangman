@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:hangman/services/game_progress.dart';
 import 'package:hangman/services/game_setting.dart';
@@ -18,8 +19,7 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   late GameState _gameState;
   late List<String> _words;
-  late String _currentWord;
-  late int _currentWordIndex;
+  late String? _currentWord;
   final Set<String> _usedLetters = {};
   bool _gameOver = false;
   bool _gameWon = false;
@@ -33,50 +33,44 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   Future<void> _loadGame() async {
-    final progressProvider = Provider.of<GameProgressProvider>(context, listen: false);
-    _currentWordIndex = progressProvider.getCurrentWordIndex(widget.subject.id);
-    _initializeGame();
+    _words = List.from(widget.subject.words);
+    _initializeGame(forceNewWord: true);
     setState(() {
       _isLoading = false;
     });
   }
 
-  void _initializeGame() {
-    _words = List.from(widget.subject.words);
-    _currentWord = _words[_currentWordIndex];
-    _gameState = GameState(
-      word: _currentWord,
-      guessedLetters: {},
-      wrongAttempts: 0,
-      maxAttempts: _maxAttempts,
-    );
-    _usedLetters.clear();
-    _gameOver = false;
-    _gameWon = false;
+  void _initializeGame({bool forceNewWord = false}) {
+    final progressProvider = Provider.of<GameProgressProvider>(context, listen: false);
+    final completedWords = progressProvider.getCompletedWords(widget.subject.id);
+    
+    if (forceNewWord || _currentWord == null) {
+      final unsolvedWords = _words.where((w) => !completedWords.contains(w)).toList();
+      
+      if (unsolvedWords.isEmpty) {
+        _showGameCompleteDialog();
+        return;
+      }
+      
+      final random = Random();
+      _currentWord = unsolvedWords[random.nextInt(unsolvedWords.length)];
+    }
+
+    setState(() {
+      _gameState = GameState(
+        word: _currentWord!,
+        guessedLetters: {},
+        wrongAttempts: 0,
+        maxAttempts: _maxAttempts,
+      );
+      _usedLetters.clear();
+      _gameOver = false;
+      _gameWon = false;
+    });
   }
 
   void _nextWord() {
-    setState(() {
-      if (_currentWordIndex < _words.length - 1) {
-        _currentWordIndex++;
-        _currentWord = _words[_currentWordIndex];
-        _gameState = GameState(
-          word: _currentWord,
-          guessedLetters: {},
-          wrongAttempts: 0,
-          maxAttempts: _maxAttempts,
-        );
-        _usedLetters.clear();
-        _gameOver = false;
-        _gameWon = false;
-        
-        // Save current word index
-        Provider.of<GameProgressProvider>(context, listen: false)
-            .updateCurrentWordIndex(widget.subject.id, _currentWordIndex);
-      } else {
-        _showGameCompleteDialog();
-      }
-    });
+    _initializeGame(forceNewWord: true);
   }
 
   void _guessLetter(String letter) {
@@ -85,7 +79,7 @@ class _GameScreenState extends State<GameScreen> {
     setState(() {
       _usedLetters.add(letter);
       
-      if (_currentWord.toUpperCase().contains(letter)) {
+      if (_currentWord!.toUpperCase().contains(letter)) {
         _gameState.guessedLetters.add(letter);
         AudioManager.instance.playCorrect();
         if (_gameState.isWordGuessed) {
@@ -108,7 +102,7 @@ class _GameScreenState extends State<GameScreen> {
     final settingsProvider = Provider.of<GameSettingsProvider>(context, listen: false);
 
     // Find unguessed letters
-    final wordLetters = _currentWord.toUpperCase().split('');
+    final wordLetters = _currentWord!.toUpperCase().split('');
     final unguessedLetters = wordLetters
         .where((letter) => !_gameState.guessedLetters.contains(letter))
         .toSet()
@@ -164,7 +158,7 @@ class _GameScreenState extends State<GameScreen> {
     final progressProvider = Provider.of<GameProgressProvider>(context, listen: false);
     
     // Mark word as completed
-    await progressProvider.markWordAsCompleted(widget.subject.id, _currentWord);
+    await progressProvider.markWordAsCompleted(widget.subject.id, _currentWord!);
     
     // Play win sound
     AudioManager.instance.playWin();
@@ -275,7 +269,7 @@ class _GameScreenState extends State<GameScreen> {
                     ],
                   ),
                   child: Text(
-                    _currentWord.toUpperCase(),
+                    _currentWord!.toUpperCase(),
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -315,16 +309,12 @@ class _GameScreenState extends State<GameScreen> {
                   children: [
                     _buildDialogButton(
                       icon: Icons.play_arrow_rounded,
-                      label: _currentWordIndex < _words.length - 1 ? 'NEXT' : 'FINISH',
+                      label: 'NEXT',
                       color: Colors.white,
                       textColor: Colors.green.shade700,
                       onPressed: () {
                         Navigator.pop(context);
-                        if (_currentWordIndex < _words.length - 1) {
-                          _nextWord();
-                        } else {
-                          _showGameCompleteDialog();
-                        }
+                        _nextWord();
                       },
                     ),
                     _buildDialogButton(
@@ -653,7 +643,6 @@ class _GameScreenState extends State<GameScreen> {
           backgroundColor: widget.subject.color,
           elevation: 0,
           actions: [
-            // Word counter
             Center(
               child: Container(
                 margin: const EdgeInsets.only(right: 8),
@@ -662,19 +651,24 @@ class _GameScreenState extends State<GameScreen> {
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text(
-                  '${_currentWordIndex + 1}/${_words.length}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Consumer<GameProgressProvider>(
+                  builder: (context, progress, child) {
+                    final completed = progress.getCompletedWords(widget.subject.id).length;
+                    return Text(
+                      '$completed/${_words.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: _initializeGame,
-              tooltip: 'Restart Word',
+              icon: const Icon(Icons.skip_next_rounded),
+              onPressed: () => _initializeGame(forceNewWord: true),
+              tooltip: 'Next Word',
             ),
           ],
         ),
@@ -842,11 +836,11 @@ class _GameScreenState extends State<GameScreen> {
                             // Restart Button
                             ElevatedButton.icon(
                               onPressed: () {
-                                _initializeGame();
+                                _initializeGame(forceNewWord: true);
                               },
-                              icon: const Icon(Icons.play_arrow_rounded, size: 20),
+                              icon: const Icon(Icons.skip_next_rounded, size: 20),
                               label: const Text(
-                                'Restart',
+                                'Next',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               style: ElevatedButton.styleFrom(
