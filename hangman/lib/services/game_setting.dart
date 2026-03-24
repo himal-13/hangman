@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hangman/services/ad_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hangman/audio/audio_manager.dart';
 
@@ -45,13 +46,56 @@ class GameSettingsProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> addHints(int count) async {
-    _availableHints += count;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_availableHintsKey, _availableHints);
-    notifyListeners();
-  }
+//   Future<void> addHints(int count) async {
+//     _availableHints += count;
+//     final prefs = await SharedPreferences.getInstance();
+//     await prefs.setInt(_availableHintsKey, _availableHints);
+//     notifyListeners();
+//   }
+// // Add these methods to GameSettingsProvider class:
 
+Future<void> addHints(int count) async {
+  _availableHints += count;
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setInt(_availableHintsKey, _availableHints);
+  notifyListeners();
+}
+
+// Add method to get hints via rewarded ad
+Future<bool> getHintViaRewardedAd(BuildContext context) async {
+  // Show ad first, then give hint
+  bool success = false;
+  
+  await AdMobService.showRewardedAd(
+    onRewarded: () {
+      // Add 2 hints when user watches the ad
+      addHints(2);
+      success = true;
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('🎉 You earned 2 hints!'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    },
+    onFailed: () {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Ad failed to load. Please try again.'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    },
+  );
+  
+  return success;
+}
   Future<void> setSoundMuted(bool muted) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_soundMutedKey, muted);
