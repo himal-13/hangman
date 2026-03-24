@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         actions: [
-          _buildHintCounter(),
+          _buildCoinCounter(),
           _buildSettingsButton(context),
         ],
       ),
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildHintCounter() {
+  Widget _buildCoinCounter() {
     return Consumer<GameSettingsProvider>(
       builder: (context, settings, _) => Container(
         margin: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
@@ -52,10 +52,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: Row(
           children: [
-            const Icon(Icons.lightbulb, size: 16, color: Colors.amber),
+            const Text('🪙', style: TextStyle(fontSize: 16)),
             const SizedBox(width: 4),
             Text(
-              '${settings.availableHints}',
+              '${settings.coins}',
               style: TextStyle(color: Colors.amber.shade900, fontWeight: FontWeight.bold),
             ),
           ],
@@ -80,14 +80,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class DailyHintClaimCard extends StatelessWidget {
-  const DailyHintClaimCard({super.key});
+class DailyCoinClaimCard extends StatelessWidget {
+  const DailyCoinClaimCard({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<GameSettingsProvider>(
       builder: (context, settings, child) {
-        if (!settings.canClaimDailyHints) return const SizedBox.shrink();
+        if (!settings.canClaimDailyReward) return const SizedBox.shrink();
 
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -99,19 +99,19 @@ class DailyHintClaimCard extends StatelessWidget {
           ),
           child: Row(
             children: [
-              const Icon(Icons.lightbulb, size: 40, color: Colors.white),
+              const Text('🪙', style: TextStyle(fontSize: 32)),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
                     Text('Daily Reward!', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                    Text('Claim your 5 free hints for today', style: TextStyle(color: Colors.white, fontSize: 13)),
+                    Text('Claim your 20 free coins for today', style: TextStyle(color: Colors.white, fontSize: 13)),
                   ],
                 ),
               ),
               ElevatedButton(
-                onPressed: () => settings.claimDailyHints(),
+                onPressed: () => settings.claimDailyReward(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.orange,
@@ -138,7 +138,7 @@ class ClassicModeView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const DailyHintClaimCard(),
+              const DailyCoinClaimCard(),
               const SizedBox(height: 8),
               _buildSectionHeader('Welcome back! 👋', 'Choose your challenge'),
               const SizedBox(height: 24),

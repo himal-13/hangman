@@ -98,241 +98,93 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
 
- void _useHint() async {
-  final settingsProvider = Provider.of<GameSettingsProvider>(context, listen: false);
-  
-  // Check if there are available hints first
-  if (settingsProvider.availableHints > 0) {
-    _useHintWithExistingHint(settingsProvider);
-    return;
-  }
-  
-  // No hints available - show ad dialog
-  _showNoHintsDialog(settingsProvider);
-}
-
-void _useHintWithExistingHint(GameSettingsProvider settingsProvider) {
-  // Find unguessed letters
-  final wordLetters = _currentWord!.toUpperCase().split('');
-  final unguessedLetters = wordLetters
-      .where((letter) => !_gameState.guessedLetters.contains(letter))
-      .toSet()
-      .toList();
-
-  if (unguessedLetters.isEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('No letters to hint!'),
-        behavior: SnackBarBehavior.floating,
+  void _showHintOptions() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-    );
-    return;
-  }
-
-  // Deduct a hint
-  settingsProvider.useHint();
-  _giveHint(unguessedLetters, settingsProvider);
-}
-
-void _showNoHintsDialog(GameSettingsProvider settingsProvider) {
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return Dialog(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.purple.shade400,
-                Colors.purple.shade700,
-              ],
-            ),
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.purple.shade800.withOpacity(0.5),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-                spreadRadius: 2,
-              ),
-            ],
-          ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Icon
-              Container(
-                margin: const EdgeInsets.only(bottom: 15),
-                child: Stack(
-                  children: [
-                    Container(
-                      width: 70,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const Positioned.fill(
-                      child: Icon(
-                        Icons.lightbulb_outline,
-                        size: 45,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              
-              // Title
               const Text(
-                'No Hints Left!',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: 1.5,
-                ),
+                'Get Help',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              
-              const SizedBox(height: 12),
-              
-              // Message
+              const SizedBox(height: 20),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: const Text(
-                  'Watch a short ad to earn 2 hints and continue playing!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: ListTile(
+                  leading: const Icon(Icons.abc, color: Colors.blue, size: 30),
+                  title: const Text('Reveal a Letter'),
+                  subtitle: const Text('Costs 10 coins'),
+                  trailing: const Text('🪙 10', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _buyLetterHint();
+                  },
                 ),
               ),
-              
-              const SizedBox(height: 24),
-              
-              // Buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  // Watch Ad Button
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Material(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(30),
-                        child: InkWell(
-                          onTap: () async {
-                            Navigator.pop(context);
-                            
-                            // Show loading indicator
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (context) => const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                            
-                            // Try to get hints via ad
-                            final success = await settingsProvider.getHintViaRewardedAd(context);
-                            
-                            // Dismiss loading dialog
-                            if (context.mounted) {
-                              Navigator.pop(context);
-                            }
-                            
-                            if (success && context.mounted) {
-                              // Now use a hint
-                              _useHintWithExistingHint(settingsProvider);
-                            }
-                          },
-                          borderRadius: BorderRadius.circular(30),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.play_circle_filled, 
-                                  color: Colors.purple.shade700, 
-                                  size: 20,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'Watch Ad (+2 Hints)',
-                                  style: TextStyle(
-                                    color: Colors.purple.shade700,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  
-                  // Cancel Button
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Material(
-                        color: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(30),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          borderRadius: BorderRadius.circular(30),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            child: const Center(
-                              child: Text(
-                                'Cancel',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              
-              const SizedBox(height: 8),
-              
-              // Optional: Earn hints on home screen note
-              Text(
-                'You can also claim daily hints on the home screen',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.white.withOpacity(0.7),
+              const SizedBox(height: 5),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.amber.shade50,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: ListTile(
+                  leading: const Icon(Icons.lightbulb, color: Colors.amber, size: 30),
+                  title: const Text('Word Hint'),
+                  subtitle: const Text('Costs 15 coins'),
+                  trailing: const Text('🪙 15', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _buyWordHint();
+                  },
                 ),
               ),
+              const SizedBox(height: 30,)
             ],
           ),
-        ),
-      );
-    },
-  );
-}
-  void _giveHint(List<String> unguessedLetters, GameSettingsProvider settingsProvider) {
+        );
+      },
+    );
+  }
+
+  void _buyLetterHint() async {
+    final settingsProvider = Provider.of<GameSettingsProvider>(context, listen: false);
+    
+    if (settingsProvider.coins >= 10) {
+      // Find unguessed letters
+      final wordLetters = _currentWord!.toUpperCase().split('');
+      final unguessedLetters = wordLetters
+          .where((letter) => !_gameState.guessedLetters.contains(letter))
+          .toSet()
+          .toList();
+
+      if (unguessedLetters.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No letters to hint!'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        return;
+      }
+
+      settingsProvider.spendCoins(10);
+      _giveLetterHint(unguessedLetters, settingsProvider);
+    } else {
+      _showNotEnoughCoinsDialog(settingsProvider);
+    }
+  }
+
+  void _giveLetterHint(List<String> unguessedLetters, GameSettingsProvider settingsProvider) {
     // Pick a random unguessed letter
     final hintLetter = unguessedLetters[
       DateTime.now().millisecondsSinceEpoch % unguessedLetters.length
@@ -349,6 +201,223 @@ void _showNoHintsDialog(GameSettingsProvider settingsProvider) {
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 2),
       ),
+    );
+  }
+
+  void _buyWordHint() {
+    final settingsProvider = Provider.of<GameSettingsProvider>(context, listen: false);
+    
+    if (settingsProvider.coins >= 15) {
+      settingsProvider.spendCoins(15);
+      final hint = widget.subject.wordHints[_currentWord!] ?? 'No hint available for this word.';
+      
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('💡 Word Hint', style: TextStyle(fontWeight: FontWeight.bold)),
+          content: Text(
+            hint, 
+            style: const TextStyle(fontSize: 18),
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK', style: TextStyle(fontSize: 16)),
+            ),
+          ],
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        ),
+      );
+    } else {
+      _showNotEnoughCoinsDialog(settingsProvider);
+    }
+  }
+
+  void _showNotEnoughCoinsDialog(GameSettingsProvider settingsProvider) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.purple.shade400,
+                  Colors.purple.shade700,
+                ],
+              ),
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.purple.shade800.withOpacity(0.5),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon
+                Container(
+                  margin: const EdgeInsets.only(bottom: 15),
+                  child: Stack(
+                    children: [
+                      Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const Positioned.fill(
+                        child: Center(
+                          child: Text('🪙', style: TextStyle(fontSize: 40)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                // Title
+                const Text(
+                  'Not Enough Coins!',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+                
+                const SizedBox(height: 12),
+                
+                // Message
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: const Text(
+                    'Watch a short ad to earn 20 coins and continue playing!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                
+                const SizedBox(height: 24),
+                
+                // Buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // Watch Ad Button
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Material(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30),
+                          child: InkWell(
+                            onTap: () async {
+                              Navigator.pop(context);
+                              
+                              // Show loading indicator
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                              
+                              // Try to get hints via ad
+                              final success = await settingsProvider.getCoinsViaRewardedAd(context);
+                              
+                              // Dismiss loading dialog
+                              if (context.mounted) {
+                                Navigator.pop(context);
+                              }
+                              
+                              if (success && context.mounted) {
+                                _showHintOptions();
+                              }
+                            },
+                            borderRadius: BorderRadius.circular(30),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.play_circle_filled, 
+                                    color: Colors.purple.shade700, 
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 2),
+                                  
+                                  Text(
+                                    'Ad (+20 🪙)',
+                                    style: TextStyle(
+                                      color: Colors.purple.shade700,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    
+                    // Cancel Button
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Material(
+                          color: Colors.white.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(30),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            borderRadius: BorderRadius.circular(30),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              child: const Center(
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),                
+                
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -870,204 +939,206 @@ void _showNoHintsDialog(GameSettingsProvider settingsProvider) {
             ),
           ],
         ),
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                widget.subject.color.withOpacity(0.1),
-                Colors.white,
+        body: SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  widget.subject.color.withOpacity(0.1),
+                  Colors.white,
+                ],
+              ),
+            ),
+            child: Column(
+              children: [
+                // Hangman drawing
+                Container(
+                  margin: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: SizedBox(
+                    height: 130,
+                    child: Center(
+                      child: HangmanDrawing(
+                        wrongAttempts: _gameState.wrongAttempts,
+                        maxAttempts: _maxAttempts,
+                        subjectColor: widget.subject.color,
+                      ),
+                    ),
+                  ),
+                ),
+          
+                // Word display
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          blurRadius: 5,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final wordDisplay = _gameState.wordDisplay;
+                        
+                        if (wordDisplay.length > 8) {
+                          final midPoint = (wordDisplay.length / 2).ceil();
+                          final firstLine = wordDisplay.take(midPoint).toList();
+                          final secondLine = wordDisplay.skip(midPoint).toList();
+                          
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _buildWordLine(firstLine),
+                              const SizedBox(height: 8),
+                              _buildWordLine(secondLine),
+                            ],
+                          );
+                        } else {
+                          return Center(
+                            child: _buildWordLine(wordDisplay),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ),
+          
+                // Attempts indicator
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: widget.subject.color, width: 1),
+                        ),
+                        child: Text(
+                          '${_gameState.remainingAttempts} attempts left',
+                          style: TextStyle(
+                            color: widget.subject.color,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+          
+                // Keyboard
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(8, 4, 8, 8),
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          blurRadius: 5,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        // Hint and Next Buttons Header
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Hint Button
+                              Consumer<GameSettingsProvider>(
+                                builder: (context, settings, child) {
+                                  final coins = settings.coins;
+                                  
+                                  return ElevatedButton.icon(
+                                    onPressed: !_gameOver && !_gameWon ? _showHintOptions : null,
+                                    icon: const Text('🪙', style: TextStyle(fontSize: 16)),
+                                    label: Text(
+                                      '$coins',
+                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.amber.shade500,
+                                      foregroundColor: Colors.white,
+                                      disabledBackgroundColor: Colors.grey.shade300,
+                                      elevation: 2,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    ),
+                                  );
+                                },
+                              ),
+                              
+                              // Restart Button
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  _initializeGame(forceNewWord: true);
+                                },
+                                icon: const Icon(Icons.skip_next_rounded, size: 20),
+                                label: const Text(
+                                  'Next',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: widget.subject.color,
+                                  foregroundColor: Colors.white,
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        
+                        // Actual Keyboard
+                        Expanded(
+                          child: Keyboard(
+                            onLetterSelected: _guessLetter,
+                            usedLetters: _usedLetters,
+                            subjectColor: widget.subject.color,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
-          ),
-          child: Column(
-            children: [
-              // Hangman drawing
-              Container(
-                margin: const EdgeInsets.fromLTRB(20, 10, 20, 5),
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: SizedBox(
-                  height: 130,
-                  child: Center(
-                    child: HangmanDrawing(
-                      wrongAttempts: _gameState.wrongAttempts,
-                      maxAttempts: _maxAttempts,
-                      subjectColor: widget.subject.color,
-                    ),
-                  ),
-                ),
-              ),
-
-              // Word display
-              Expanded(
-                flex: 1,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        blurRadius: 5,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final wordDisplay = _gameState.wordDisplay;
-                      
-                      if (wordDisplay.length > 8) {
-                        final midPoint = (wordDisplay.length / 2).ceil();
-                        final firstLine = wordDisplay.take(midPoint).toList();
-                        final secondLine = wordDisplay.skip(midPoint).toList();
-                        
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _buildWordLine(firstLine),
-                            const SizedBox(height: 8),
-                            _buildWordLine(secondLine),
-                          ],
-                        );
-                      } else {
-                        return Center(
-                          child: _buildWordLine(wordDisplay),
-                        );
-                      }
-                    },
-                  ),
-                ),
-              ),
-
-              // Attempts indicator
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: widget.subject.color, width: 1),
-                      ),
-                      child: Text(
-                        '${_gameState.remainingAttempts} attempts left',
-                        style: TextStyle(
-                          color: widget.subject.color,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Keyboard
-              Expanded(
-                flex: 2,
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(8, 4, 8, 8),
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        blurRadius: 5,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      // Hint and Next Buttons Header
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Hint Button
-                            Consumer<GameSettingsProvider>(
-                              builder: (context, settings, child) {
-                                final availableHints = settings.availableHints;
-                                
-                                return ElevatedButton.icon(
-                                  onPressed: !_gameOver && !_gameWon ? _useHint : null,
-                                  icon: const Icon(Icons.lightbulb, size: 18),
-                                  label: Text(
-                                    'Hint ($availableHints)',
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.amber.shade500,
-                                    foregroundColor: Colors.white,
-                                    disabledBackgroundColor: Colors.grey.shade300,
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                  ),
-                                );
-                              },
-                            ),
-                            
-                            // Restart Button
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                _initializeGame(forceNewWord: true);
-                              },
-                              icon: const Icon(Icons.skip_next_rounded, size: 20),
-                              label: const Text(
-                                'Next',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: widget.subject.color,
-                                foregroundColor: Colors.white,
-                                elevation: 2,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      
-                      // Actual Keyboard
-                      Expanded(
-                        child: Keyboard(
-                          onLetterSelected: _guessLetter,
-                          usedLetters: _usedLetters,
-                          subjectColor: widget.subject.color,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
           ),
         ),
       ),

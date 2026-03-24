@@ -5,6 +5,7 @@ class Subject {
   final String name;
   final String icon;
   final List<String> words;
+  final Map<String, String> wordHints;
   final Color color;
 
   Subject({
@@ -12,6 +13,7 @@ class Subject {
     required this.name,
     required this.icon,
     required this.words,
+    required this.wordHints,
     required this.color,
   });
 
