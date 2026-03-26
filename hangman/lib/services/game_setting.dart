@@ -8,7 +8,7 @@ class GameSettingsProvider extends ChangeNotifier {
   static const String _soundMutedKey = 'sound_muted';
   static const String _lastClaimedDateKey = 'last_claimed_date';
 
-  int _coins = 100; 
+  int _coins = 10; 
   bool _soundMuted = false;
   String _lastClaimedDate = '';
 
@@ -27,7 +27,7 @@ class GameSettingsProvider extends ChangeNotifier {
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
 
-    _coins = prefs.getInt(_coinsKey) ?? 100;
+    _coins = prefs.getInt(_coinsKey) ?? 10;
     _soundMuted = prefs.getBool(_soundMutedKey) ?? false;
     _lastClaimedDate = prefs.getString(_lastClaimedDateKey) ?? '';
 

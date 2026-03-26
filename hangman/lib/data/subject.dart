@@ -79,12 +79,12 @@ class SubjectsData {
       words: [
         'NEW YORK', 'LONDON', 'TOKYO', 'PARIS', 'DUBAI', 'SINGAPORE', 'ROME', 'BERLIN',
         'BARCELONA', 'AMSTERDAM', 'VENICE', 'PRAGUE', 'VIENNA', 'BUDAPEST', 'LISBON', 'ATHENS',
-        'CAIRO', 'MUMBAI', 'SHANGHAI', 'SYDNEY', 'TORONTO', 'MEXICO CITY', 'RIO', 'CAPE TOWN'
+        'CAIRO', 'MUMBAI', 'SHANGHAI', 'SYDNEY', 'TORONTO', 'MEXICO', 'RIO',
       ],
       wordHints: {
         'NEW YORK': 'The Big Apple, USA', 'LONDON': 'Capital of UK, Big Ben', 'TOKYO': 'Capital of Japan', 'PARIS': 'City of Love, Eiffel Tower', 'DUBAI': 'City in UAE, Burj Khalifa', 'SINGAPORE': 'Garden City, Marina Bay', 'ROME': 'Eternal City, Colosseum', 'BERLIN': 'German capital, Brandenburg Gate',
         'BARCELONA': 'Spanish city, Sagrada Familia', 'AMSTERDAM': 'Dutch city, canals', 'VENICE': 'City of Canals, Italy', 'PRAGUE': 'City of a Hundred Spires', 'VIENNA': 'Austrian city, music capital', 'BUDAPEST': 'Hungarian capital, Danube River', 'LISBON': 'Portuguese capital, hills', 'ATHENS': 'Greek capital, Acropolis',
-        'CAIRO': 'Egyptian capital, pyramids nearby', 'MUMBAI': 'Indian city, Bollywood', 'SHANGHAI': 'Chinese megacity, skyscrapers', 'SYDNEY': 'Australian city, Opera House', 'TORONTO': 'Canadian city, CN Tower', 'MEXICO CITY': 'Mexican capital, Aztec history', 'RIO': 'Brazilian city, Christ the Redeemer', 'CAPE TOWN': 'South African city, Table Mountain'
+        'CAIRO': 'Egyptian capital, pyramids nearby', 'MUMBAI': 'Indian city, Bollywood', 'SHANGHAI': 'Chinese megacity, skyscrapers', 'SYDNEY': 'Australian city, Opera House', 'TORONTO': 'Canadian city, CN Tower', 'MEXICO': 'Mexican capital, Aztec history', 'RIO': 'Brazilian city, Christ the Redeemer', 'CAPE TOWN': 'South African city, Table Mountain'
       },
       color: Colors.orange,
     ),

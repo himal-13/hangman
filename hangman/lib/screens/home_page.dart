@@ -24,10 +24,10 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         toolbarHeight: 70,
         title: const Text(
-          'Hangman',
+          'Subject Hangman',
           style: TextStyle(
             fontWeight: FontWeight.w800,
-            fontSize: 28,
+            fontSize: 25,
             letterSpacing: -0.5,
             color: Color(0xFF1E293B),
           ),
