@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         toolbarHeight: 70,
         title: const Text(
-          'WordCraft',
+          'Hangman',
           style: TextStyle(
             fontWeight: FontWeight.w800,
             fontSize: 28,
@@ -101,10 +101,10 @@ class DailyCoinClaimCard extends StatelessWidget {
             children: [
               const Text('🪙', style: TextStyle(fontSize: 32)),
               const SizedBox(width: 16),
-              Expanded(
+              const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text('Daily Reward!', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                     Text('Claim your 20 free coins for today', style: TextStyle(color: Colors.white, fontSize: 13)),
                   ],

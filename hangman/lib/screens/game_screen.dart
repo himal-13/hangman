@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hangman/services/game_progress.dart';
 import 'package:hangman/services/game_setting.dart';
 import 'package:hangman/audio/audio_manager.dart';
+import 'package:hangman/services/rating_service.dart';
 import 'package:provider/provider.dart';
 import 'package:hangman/components/hangman_drawing.dart';
 import '../models/subject.dart';
@@ -26,9 +27,12 @@ class _GameScreenState extends State<GameScreen> {
   final int _maxAttempts = 6;
   bool _isLoading = true;
 
+  late DateTime _sessionStartTime;
+  
   @override
   void initState() {
     super.initState();
+    _sessionStartTime = DateTime.now();
     _loadGame();
   }
 
@@ -438,6 +442,25 @@ class _GameScreenState extends State<GameScreen> {
       _showGameCompleteDialog();
     } else {
       _showWordGuessedDialog();
+    }
+    
+    // Check if we should show rating prompt
+    _checkRatingTrigger();
+  }
+
+  void _checkRatingTrigger() async {
+    final now = DateTime.now();
+    final playDuration = now.difference(_sessionStartTime);
+    
+    // Trigger if they've played for at least 1 minute (for testing, usually 3 minutes as planned)
+    // I'll set it to 3 minutes as discussed.
+    if (playDuration.inMinutes >= 3) {
+      if (await RatingService.instance.shouldShowRating()) {
+        if (mounted) {
+          RatingService.instance.showStarRatingDialog(context);
+          await RatingService.instance.markRatingPromptShown();
+        }
+      }
     }
   }
 

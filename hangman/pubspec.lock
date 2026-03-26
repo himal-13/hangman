@@ -26,7 +26,7 @@ packages:
     source: hosted
     version: "2.13.0"
   audioplayers:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: audioplayers
       sha256: a72dd459d1a48f61a6fb9c0134dba26597c9236af40639ff0eb70eb4e0baab70
@@ -181,18 +181,18 @@ packages:
     dependency: "direct main"
     description:
       name: flame
-      sha256: d084557523a45ad446d2480a4fa5a1c75aade5f8eb54251418e0ed4ee73ff3b8
+      sha256: "78c87c34d512f5dd5b69bda823bf31a9f53b27cf319b5326b788f0ec93cbd0b3"
       url: "https://pub.dev"
     source: hosted
-    version: "1.35.1"
+    version: "1.36.0"
   flame_audio:
     dependency: "direct main"
     description:
       name: flame_audio
-      sha256: "47d414720769fd0f1e73b1f14f857018fe49509452fe6c412d05357c6285f987"
+      sha256: "21cda146fdc47e10d1121b1f7f44fbb560b67448276998329ca76aa16990b676"
       url: "https://pub.dev"
     source: hosted
-    version: "2.11.14"
+    version: "2.12.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -206,6 +206,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  flutter_rating_bar:
+    dependency: transitive
+    description:
+      name: flutter_rating_bar
+      sha256: d2af03469eac832c591a1eba47c91ecc871fe5708e69967073c043b2d775ed93
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -480,6 +488,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  rate_my_app:
+    dependency: "direct main"
+    description:
+      name: rate_my_app
+      sha256: aeb400808f99aba7e8b853b911915bca10308aff711fa8e2d46b5f68dc383786
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.2"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -702,5 +718,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.10.3 <4.0.0"
-  flutter: ">=3.38.4"
+  dart: ">=3.11.0 <4.0.0"
+  flutter: ">=3.41.0"

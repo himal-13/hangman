@@ -5,6 +5,7 @@ import 'package:hangman/services/ad_service.dart';
 import 'package:hangman/services/game_progress.dart';
 import 'package:hangman/services/game_setting.dart';
 import 'package:hangman/audio/audio_manager.dart';
+import 'package:hangman/services/rating_service.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -17,6 +18,9 @@ void main() async {
   
   // Preload audio files
   await AudioManager.instance.preload();
+  
+  // Initialize Rating Service
+  await RatingService.instance.init();
   
   runApp(const MyApp());
 }
