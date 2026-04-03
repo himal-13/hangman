@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:hangman/screens/home_page.dart';
 import 'package:hangman/services/ad_service.dart';
 import 'package:hangman/services/game_progress.dart';
 import 'package:hangman/services/game_setting.dart';
 import 'package:hangman/audio/audio_manager.dart';
 import 'package:hangman/services/rating_service.dart';
+import 'package:hangman/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           fontFamily: 'Poppins',
         ),
-        home: const HomeScreen(),
+        home: const SplashScreen(),
       ),
     );
   }

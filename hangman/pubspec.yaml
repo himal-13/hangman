@@ -33,6 +33,7 @@ flutter:
 
   assets:
     - assets/audio/
+    - assets/icon.png
 
 
 icons_launcher:

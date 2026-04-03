@@ -24,15 +24,22 @@ class KeyboardGame extends FlameGame with TapDetector {
   @override
   Future<void> onLoad() async {
     // Create keyboard buttons
-    double yOffset = 20;
+    double buttonWidth = (size.x - 20) / 10;
+    if (buttonWidth > 40) buttonWidth = 40; // max size limit
+    double buttonHeight = buttonWidth;
+    double spacing = buttonWidth * 0.1;
+
+    double yOffset = 10;
     for (final row in _rows) {
-      double xOffset = (size.x - (row.length * 45)) / 2; // Center the row
+      double rowWidth = row.length * (buttonWidth + spacing) - spacing;
+      double xOffset = (size.x - rowWidth) / 2;
 
       for (final letter in row) {
         final isUsed = usedLetters.contains(letter);
         final button = KeyboardButton(
           letter: letter,
           position: Vector2(xOffset, yOffset),
+          sizeOverride: Vector2(buttonWidth, buttonHeight),
           isUsed: isUsed,
           subjectColor: subjectColor,
           onTap: () {
@@ -42,9 +49,9 @@ class KeyboardGame extends FlameGame with TapDetector {
           },
         );
         add(button);
-        xOffset += 45;
+        xOffset += buttonWidth + spacing;
       }
-      yOffset += 50;
+      yOffset += buttonHeight + spacing + 5;
     }
   }
 
@@ -57,6 +64,7 @@ class KeyboardButton extends PositionComponent with TapCallbacks {
   final bool isUsed;
   final Color subjectColor;
   final VoidCallback onTap;
+  final Vector2 sizeOverride;
 
   KeyboardButton({
     required this.letter,
@@ -64,8 +72,9 @@ class KeyboardButton extends PositionComponent with TapCallbacks {
     required this.isUsed,
     required this.subjectColor,
     required this.onTap,
-  }) {
-    size = Vector2(40, 40);
+    Vector2? sizeOverride,
+  }) : sizeOverride = sizeOverride ?? Vector2(40, 40) {
+    size = this.sizeOverride;
   }
 
   @override

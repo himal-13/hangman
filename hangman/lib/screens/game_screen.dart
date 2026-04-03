@@ -103,6 +103,13 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _showHintOptions() {
+  final settingsProvider = Provider.of<GameSettingsProvider>(context, listen: false);
+  
+  // Check if user has at least 10 coins (minimum for any hint)
+  if (settingsProvider.coins < 10) {
+    _showNotEnoughCoinsDialog(settingsProvider);
+    return;
+  }
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -1101,14 +1108,13 @@ class _GameScreenState extends State<GameScreen> {
                               // Hint Button
                               Consumer<GameSettingsProvider>(
                                 builder: (context, settings, child) {
-                                  final coins = settings.coins;
                                   
                                   return ElevatedButton.icon(
                                     onPressed: !_gameOver && !_gameWon ? _showHintOptions : null,
                                     icon: const Text('🪙', style: TextStyle(fontSize: 16)),
-                                    label: Text(
-                                      '$coins',
-                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                    label: const Text(
+                                      'Hint',
+                                      style: TextStyle(fontWeight: FontWeight.bold),
                                     ),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.amber.shade500,
@@ -1183,13 +1189,15 @@ class _GameScreenState extends State<GameScreen> {
             boxHeight = 40.0;
             fontSize = 20.0;
           }
+
+          final isSpace = letter == ' ';
           
           return Container(
             width: boxWidth,
             height: boxHeight,
             margin: const EdgeInsets.symmetric(horizontal: 2),
             decoration: BoxDecoration(
-              border: Border(
+              border: isSpace ? null : Border(
                 bottom: BorderSide(
                   color: widget.subject.color,
                   width: 3,
@@ -1230,6 +1238,7 @@ class Keyboard extends StatelessWidget {
       ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
       ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
       ['Z', 'X', 'C', 'V', 'B', 'N', 'M'],
+      ['SPACE'],
     ];
 
     return LayoutBuilder(
@@ -1247,9 +1256,15 @@ class Keyboard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: row.map((letter) {
-                  final isUsed = usedLetters.contains(letter);
+                  final keyLabel = letter == 'SPACE' ? ' ' : letter;
+                  final isUsed = usedLetters.contains(keyLabel);
                   
                   double horizontalPadding = 1.5;
+                  double width = buttonSize * 0.9;
+                  
+                  if (letter == 'SPACE') {
+                    width = buttonSize * 4; // Make space bar wider
+                  }
                   
                   return Padding(
                     padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
@@ -1257,16 +1272,16 @@ class Keyboard extends StatelessWidget {
                       color: isUsed ? Colors.grey.shade300 : subjectColor,
                       borderRadius: BorderRadius.circular(6),
                       child: InkWell(
-                        onTap: isUsed ? null : () => onLetterSelected(letter),
+                        onTap: isUsed ? null : () => onLetterSelected(keyLabel),
                         borderRadius: BorderRadius.circular(6),
                         child: Container(
-                          width: buttonSize * 0.9,
+                          width: width,
                           height: buttonSize * 0.9,
                           alignment: Alignment.center,
                           child: Text(
                             letter,
                             style: TextStyle(
-                              fontSize: buttonSize * 0.35,
+                              fontSize: letter == 'SPACE' ? buttonSize * 0.25 : buttonSize * 0.35,
                               fontWeight: FontWeight.bold,
                               color: isUsed ? Colors.grey.shade600 : Colors.white,
                             ),
@@ -1300,7 +1315,7 @@ class GameState {
 
   bool get isWordGuessed {
     return word.toUpperCase().split('').every(
-      (letter) => guessedLetters.contains(letter)
+      (letter) => letter == ' ' || guessedLetters.contains(letter)
     );
   }
 
@@ -1308,6 +1323,7 @@ class GameState {
 
   List<String> get wordDisplay {
     return word.toUpperCase().split('').map((letter) {
+      if (letter == ' ') return ' ';
       return guessedLetters.contains(letter) ? letter : '_';
     }).toList();
   }
