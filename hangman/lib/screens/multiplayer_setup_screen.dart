@@ -92,7 +92,7 @@ class _MultiplayerSetupScreenState extends State<MultiplayerSetupScreen> {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: ChoiceChip(
-                    label: Text('$count Players', style: TextStyle(color: isSelected ? Colors.white : Colors.black87)),
+                    label: Text('${count}P', style: TextStyle(color: isSelected ? Colors.white : Colors.black87)),
                     selected: isSelected,
                     selectedColor: Colors.orange,
                     onSelected: (selected) {

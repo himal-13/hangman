@@ -32,7 +32,7 @@ class GameSettingsProvider extends ChangeNotifier {
     _lastClaimedDate = prefs.getString(_lastClaimedDateKey) ?? '';
 
     // Keep audio manager in sync with saved sound setting.
-    AudioManager.instance.setMuted(_soundMuted);
+    AudioManager.toggleSound(); // Ensure the audio manager reflects the current sound setting
 
     notifyListeners();
   }
@@ -93,7 +93,7 @@ class GameSettingsProvider extends ChangeNotifier {
     await prefs.setBool(_soundMutedKey, muted);
 
     _soundMuted = muted;
-    AudioManager.instance.setMuted(muted);
+    AudioManager.toggleSound();
     notifyListeners();
   }
 

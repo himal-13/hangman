@@ -68,7 +68,7 @@ class _MultiplayerGameScreenState extends State<MultiplayerGameScreen> {
       _guessedLetters.add(letter);
 
       if (_currentWord.toUpperCase().contains(letter)) {
-        AudioManager.instance.playCorrect();
+        AudioManager.playCorrect();
         
         bool isWordGuessed = _currentWord.toUpperCase().split('').every((l) => _guessedLetters.contains(l));
         if (isWordGuessed) {
@@ -77,7 +77,7 @@ class _MultiplayerGameScreenState extends State<MultiplayerGameScreen> {
         }
       } else {
         activePlayer.wrongAttempts++;
-        AudioManager.instance.playWrong();
+        AudioManager.playWrong();
         _moveToNextPlayer();
       }
     });

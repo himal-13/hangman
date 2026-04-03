@@ -17,7 +17,7 @@ void main() async {
   await AdMobService.loadRewardedAd();
   
   // Preload audio files
-  await AudioManager.instance.preload();
+  await AudioManager.load();
   
   // Initialize Rating Service
   await RatingService.instance.init();

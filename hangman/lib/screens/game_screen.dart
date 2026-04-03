@@ -85,17 +85,17 @@ class _GameScreenState extends State<GameScreen> {
       
       if (_currentWord!.toUpperCase().contains(letter)) {
         _gameState.guessedLetters.add(letter);
-        AudioManager.instance.playCorrect();
+        AudioManager.playCorrect();
         if (_gameState.isWordGuessed) {
           _gameWon = true;
           _handleWordCompletion();
         }
       } else {
         _gameState.wrongAttempts++;
-        AudioManager.instance.playWrong();
+        AudioManager.playWrong();
         if (_gameState.isGameOver) {
           _gameOver = true;
-          AudioManager.instance.playLose();
+          AudioManager.playWrong();
           _showGameOverDialog();
         }
       }
@@ -439,7 +439,7 @@ class _GameScreenState extends State<GameScreen> {
     await progressProvider.markWordAsCompleted(widget.subject.id, _currentWord!);
     
     // Play win sound
-    AudioManager.instance.playWin();
+    AudioManager.playLevelComplete();
     
     // Check if this was the last word in the subject
     final completedWords = progressProvider.getCompletedWords(widget.subject.id);
