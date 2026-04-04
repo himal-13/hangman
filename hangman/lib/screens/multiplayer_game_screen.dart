@@ -73,7 +73,7 @@ class _MultiplayerGameScreenState extends State<MultiplayerGameScreen> {
         bool isWordGuessed = _currentWord.toUpperCase().split('').every((l) => _guessedLetters.contains(l));
         if (isWordGuessed) {
           activePlayer.score++;
-          _nextWord();
+          _showWordFoundDialog(activePlayer);
         }
       } else {
         activePlayer.wrongAttempts++;
@@ -83,15 +83,49 @@ class _MultiplayerGameScreenState extends State<MultiplayerGameScreen> {
     });
   }
 
-  void _nextWord() {
-    _currentWordIndex++;
-    if (_currentWordIndex >= _wordsList.length) {
-      _wordsList.shuffle();
-      _currentWordIndex = 0;
-    }
-    _currentWord = _wordsList[_currentWordIndex];
-    _guessedLetters.clear();
+  void _showWordFoundDialog(MultiplayerPlayer player) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text('Word Found!', style: TextStyle(color: player.color, fontWeight: FontWeight.bold)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('${player.name} correctly guessed the word:', textAlign: TextAlign.center),
+            const SizedBox(height: 10),
+            Text(_currentWord.toUpperCase(), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, letterSpacing: 2)),
+          ],
+        ),
+        actions: [
+          Center(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: player.color),
+              onPressed: () {
+                Navigator.pop(context);
+                setState(() {
+                  _nextWord();
+                });
+              },
+              child: const Text('NEXT WORD', style: TextStyle(color: Colors.white)),
+            ),
+          ),
+        ],
+      ),
+    );
   }
+
+  void _nextWord() {
+  _currentWordIndex++;
+  if (_currentWordIndex >= _wordsList.length) {
+    _wordsList.shuffle();
+    _currentWordIndex = 0;
+  }
+  _currentWord = _wordsList[_currentWordIndex];
+  _guessedLetters.clear();
+  
+ _moveToNextPlayer();
+}
 
   void _moveToNextPlayer() {
     // Check if current player is game over

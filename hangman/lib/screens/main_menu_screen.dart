@@ -52,7 +52,7 @@ class MainMenuScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               const Text(
-                'Subject Hangman',
+                'Hangman 4 player',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w900,

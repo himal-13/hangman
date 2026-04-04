@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:hangman/data/subject.dart';
 import '../models/subject.dart';
 import 'game_screen.dart';
-import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,18 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: 70,
-        title: const Text(
-          'Subject Hangman',
-          style: TextStyle(
-            fontWeight: FontWeight.w800,
-            fontSize: 25,
-            letterSpacing: -0.5,
-            color: Color(0xFF1E293B),
-          ),
-        ),
         actions: [
           _buildCoinCounter(),
-          _buildSettingsButton(context),
         ],
       ),
       body: const ClassicModeView(),
@@ -64,20 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSettingsButton(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(right: 8, top: 10, bottom: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 8, offset: const Offset(0, 2))],
-      ),
-      child: IconButton(
-        icon: const Icon(Icons.settings_outlined, size: 24, color: Color(0xFF475569)),
-        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen())),
-      ),
-    );
-  }
 }
 
 class DailyCoinClaimCard extends StatelessWidget {
@@ -139,8 +114,6 @@ class ClassicModeView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const DailyCoinClaimCard(),
-              const SizedBox(height: 8),
-              _buildSectionHeader('Welcome back! 👋', 'Choose your challenge'),
               const SizedBox(height: 24),
               _buildDifficultySection(context, 'Easy', 'Perfect for beginners', Icons.emoji_emotions_outlined, Colors.green, SubjectsData.easySubjects, progress),
               _buildDifficultySection(context, 'Medium', 'Getting challenging', Icons.emoji_objects_outlined, Colors.orange, SubjectsData.mediumSubjects, progress),
@@ -153,19 +126,6 @@ class ClassicModeView extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(String greeting, String subtitle) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(greeting, style: TextStyle(fontSize: 16, color: Colors.grey[600], fontWeight: FontWeight.w500)),
-          const SizedBox(height: 4),
-          Text(subtitle, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
-        ],
-      ),
-    );
-  }
 
   Widget _buildDifficultySection(BuildContext context, String title, String subtitle, IconData icon, Color color, List<Subject> subjects, GameProgressProvider progress) {
     return Column(
