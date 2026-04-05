@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildCoinCounter(),
         ],
       ),
-      body: const ClassicModeView(),
+      body: const SafeArea(child: ClassicModeView()),
     );
   }
 

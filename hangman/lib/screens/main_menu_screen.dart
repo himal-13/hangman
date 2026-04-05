@@ -35,58 +35,60 @@ class MainMenuScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Logo or Game Title Idea
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  shape: BoxShape.circle,
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Logo or Game Title Idea
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Text('🎯', style: TextStyle(fontSize: 80)),
                 ),
-                child: const Text('🎯', style: TextStyle(fontSize: 80)),
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'Hangman 4 player',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w900,
-                  color: Color(0xFF1E293B),
-                  letterSpacing: -1,
+                const SizedBox(height: 24),
+                const Text(
+                  'Hangman 4 player',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF1E293B),
+                    letterSpacing: -1,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 48),
-              _buildMenuButton(
-                context,
-                title: 'Single Player',
-                icon: Icons.person,
-                color: Colors.blue,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-              _buildMenuButton(
-                context,
-                title: 'Multiplayer',
-                icon: Icons.people,
-                color: Colors.orange,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MultiplayerSetupScreen()),
-                  );
-                },
-              ),
-            ],
+                const SizedBox(height: 48),
+                _buildMenuButton(
+                  context,
+                  title: 'Single Player',
+                  icon: Icons.person,
+                  color: Colors.blue,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 20),
+                _buildMenuButton(
+                  context,
+                  title: 'Multiplayer',
+                  icon: Icons.people,
+                  color: Colors.orange,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MultiplayerSetupScreen()),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

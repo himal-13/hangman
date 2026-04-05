@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'multiplayer_game_screen.dart';
 import '../models/player.dart';
-import '../services/ad_service.dart';
 
 class MultiplayerSetupScreen extends StatefulWidget {
   const MultiplayerSetupScreen({super.key});
@@ -14,8 +13,6 @@ class _MultiplayerSetupScreenState extends State<MultiplayerSetupScreen> {
   int _playerCount = 2;
   String _difficulty = 'Easy';
   final List<TextEditingController> _nameControllers = [];
-  bool _isAdWatched = false;
-  bool _isAdLoading = false;
 
   final List<Color> _playerColors = [
     Colors.red,
@@ -28,7 +25,6 @@ class _MultiplayerSetupScreenState extends State<MultiplayerSetupScreen> {
   void initState() {
     super.initState();
     _initializeControllers();
-    AdMobService.loadRewardedAd();
   }
 
   void _initializeControllers() {
@@ -83,191 +79,133 @@ class _MultiplayerSetupScreenState extends State<MultiplayerSetupScreen> {
         centerTitle: true,
         shadowColor: Colors.black.withOpacity(0.1),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Players Section
-            _buildSectionCard(
-              title: 'PLAYERS',
-              icon: Icons.people,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [2, 3, 4].map((count) {
-                      final isSelected = _playerCount == count;
-                      return _buildOptionChip(
-                        label: '${count}P',
-                        isSelected: isSelected,
-                        selectedColor: Colors.orange,
-                        onTap: () => setState(() => _playerCount = count),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            // Difficulty Section
-            _buildSectionCard(
-              title: 'DIFFICULTY',
-              icon: Icons.speed,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: ['Easy', 'Medium', 'Hard'].map((diff) {
-                  final isSelected = _difficulty == diff;
-                  Color diffColor = Colors.green;
-                  if (diff == 'Medium') diffColor = Colors.orange;
-                  if (diff == 'Hard') diffColor = Colors.red;
-                  return _buildOptionChip(
-                    label: diff,
-                    isSelected: isSelected,
-                    selectedColor: diffColor,
-                    onTap: () => setState(() => _difficulty = diff),
-                  );
-                }).toList(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            // Player Names Section
-            _buildSectionCard(
-              title: 'PLAYER NAMES',
-              icon: Icons.edit,
-              child: Column(
-                children: List.generate(_playerCount, (index) {
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: _playerColors[index].withOpacity(0.05),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: _playerColors[index].withOpacity(0.3), width: 1.5),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color: _playerColors[index],
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(
-                              '${index + 1}',
-                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: TextField(
-                            controller: _nameControllers[index],
-                            style: const TextStyle(fontSize: 14),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Player ${index + 1} name',
-                              hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
-                              contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-              ),
-            ),
-            
-            const SizedBox(height: 24),
-            
-            // Ad Section
-            if (!_isAdWatched) ...[
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.orange.shade50, Colors.orange.shade100],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.orange.shade200),
-                ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Players Section
+              _buildSectionCard(
+                title: 'PLAYERS',
+                icon: Icons.people,
                 child: Column(
                   children: [
                     Row(
-                      children: [
-                        Icon(Icons.video_library, color: Colors.orange.shade700, size: 28),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Watch Ad to Unlock',
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              Text(
-                                'One short ad unlocks full multiplayer experience',
-                                style: TextStyle(color: Colors.grey.shade700, fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 44,
-                      child: ElevatedButton.icon(
-                        onPressed: _isAdLoading ? null : _showAd,
-                        icon: _isAdLoading 
-                          ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                          : const Icon(Icons.play_arrow),
-                        label: Text(_isAdLoading ? 'LOADING...' : 'WATCH AD'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        ),
-                      ),
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [2, 3, 4].map((count) {
+                        final isSelected = _playerCount == count;
+                        return _buildOptionChip(
+                          label: '${count}P',
+                          isSelected: isSelected,
+                          selectedColor: Colors.orange,
+                          onTap: () => setState(() => _playerCount = count),
+                        );
+                      }).toList(),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
-            ],
-            
-            // Start Button
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                onPressed: _isAdWatched ? _startGame : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _isAdWatched ? Colors.orange : Colors.grey.shade300,
-                  foregroundColor: Colors.white,
-                  elevation: _isAdWatched ? 2 : 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              const SizedBox(height: 16),
+              
+              // Difficulty Section
+              _buildSectionCard(
+                title: 'DIFFICULTY',
+                icon: Icons.speed,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: ['Easy', 'Medium', 'Hard'].map((diff) {
+                    final isSelected = _difficulty == diff;
+                    Color diffColor = Colors.green;
+                    if (diff == 'Medium') diffColor = Colors.orange;
+                    if (diff == 'Hard') diffColor = Colors.red;
+                    return _buildOptionChip(
+                      label: diff,
+                      isSelected: isSelected,
+                      selectedColor: diffColor,
+                      onTap: () => setState(() => _difficulty = diff),
+                    );
+                  }).toList(),
                 ),
-                child: Text(
-                  'START GAME',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.5,
-                    color: _isAdWatched ? Colors.white : Colors.grey.shade500,
+              ),
+              const SizedBox(height: 16),
+              
+              // Player Names Section
+              _buildSectionCard(
+                title: 'PLAYER NAMES',
+                icon: Icons.edit,
+                child: Column(
+                  children: List.generate(_playerCount, (index) {
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: _playerColors[index].withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: _playerColors[index].withOpacity(0.3), width: 1.5),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: _playerColors[index],
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${index + 1}',
+                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: TextField(
+                              controller: _nameControllers[index],
+                              style: const TextStyle(fontSize: 14),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Player ${index + 1} name',
+                                hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+                                contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ),
+              ),
+              
+              const SizedBox(height: 24),
+              
+              // Start Button
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: _startGame,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  ),
+                  child: const Text(
+                    'START GAME',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.5,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -351,27 +289,6 @@ class _MultiplayerSetupScreenState extends State<MultiplayerSetupScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Future<void> _showAd() async {
-    setState(() => _isAdLoading = true);
-    await AdMobService.showRewardedAd(
-      onRewarded: () {
-        setState(() {
-          _isAdWatched = true;
-          _isAdLoading = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Multiplayer unlocked!'), duration: Duration(seconds: 2)),
-        );
-      },
-      onFailed: () {
-        setState(() => _isAdLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to load ad. Please try again.')),
-        );
-      },
     );
   }
 }
