@@ -22,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: 70,
+        title: const Text('Hangman Game', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
         actions: [
           _buildCoinCounter(),
         ],
@@ -55,52 +56,52 @@ class _HomeScreenState extends State<HomeScreen> {
 
 }
 
-class DailyCoinClaimCard extends StatelessWidget {
-  const DailyCoinClaimCard({super.key});
+// class DailyCoinClaimCard extends StatelessWidget {
+//   const DailyCoinClaimCard({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<GameSettingsProvider>(
-      builder: (context, settings, child) {
-        if (!settings.canClaimDailyReward) return const SizedBox.shrink();
+//   @override
+//   Widget build(BuildContext context) {
+//     return Consumer<GameSettingsProvider>(
+//       builder: (context, settings, child) {
+//         if (!settings.canClaimDailyReward) return const SizedBox.shrink();
 
-        return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [Colors.amber.shade400, Colors.orange.shade600]),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [BoxShadow(color: Colors.orange.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))],
-          ),
-          child: Row(
-            children: [
-              const Text('🪙', style: TextStyle(fontSize: 32)),
-              const SizedBox(width: 16),
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Daily Reward!', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                    Text('Claim your 20 free coins for today', style: TextStyle(color: Colors.white, fontSize: 13)),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => settings.claimDailyReward(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.orange,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-                child: const Text('Claim'),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
+//         return Container(
+//           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+//           padding: const EdgeInsets.all(16),
+//           decoration: BoxDecoration(
+//             gradient: LinearGradient(colors: [Colors.amber.shade400, Colors.orange.shade600]),
+//             borderRadius: BorderRadius.circular(20),
+//             boxShadow: [BoxShadow(color: Colors.orange.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4))],
+//           ),
+//           child: Row(
+//             children: [
+//               const Text('🪙', style: TextStyle(fontSize: 32)),
+//               const SizedBox(width: 16),
+//               const Expanded(
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text('Daily Reward!', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+//                     Text('Claim your 20 free coins for today', style: TextStyle(color: Colors.white, fontSize: 13)),
+//                   ],
+//                 ),
+//               ),
+//               ElevatedButton(
+//                 onPressed: () => settings.claimDailyReward(),
+//                 style: ElevatedButton.styleFrom(
+//                   backgroundColor: Colors.white,
+//                   foregroundColor: Colors.orange,
+//                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+//                 ),
+//                 child: const Text('Claim'),
+//               ),
+//             ],
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
 
 class ClassicModeView extends StatelessWidget {
   const ClassicModeView({super.key});
@@ -113,8 +114,8 @@ class ClassicModeView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const DailyCoinClaimCard(),
-              const SizedBox(height: 24),
+              // const DailyCoinClaimCard(),
+              const SizedBox(height: 8),
               _buildDifficultySection(context, 'Easy', 'Perfect for beginners', Icons.emoji_emotions_outlined, Colors.green, SubjectsData.easySubjects, progress),
               _buildDifficultySection(context, 'Medium', 'Getting challenging', Icons.emoji_objects_outlined, Colors.orange, SubjectsData.mediumSubjects, progress),
               _buildDifficultySection(context, 'Hard', 'For word masters', Icons.psychology_outlined, Colors.red, SubjectsData.hardSubjects, progress),

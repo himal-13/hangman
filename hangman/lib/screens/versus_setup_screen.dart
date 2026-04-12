@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../services/game_setting.dart';
+import '../components/coin_dialogs.dart';
 import '../models/player.dart';
 import 'versus_word_entry_screen.dart';
 
@@ -21,6 +24,20 @@ class _VersusSetupScreenState extends State<VersusSetupScreen> {
   }
 
   void _startVersusMode() {
+    final settingsProvider = Provider.of<GameSettingsProvider>(context, listen: false);
+
+    if (settingsProvider.coins < 20) {
+      CoinDialogs.showNotEnoughCoinsDialog(
+        context: context,
+        settingsProvider: settingsProvider,
+        // No special action after ad, they can just click CONTINUE again
+      );
+      return;
+    }
+
+    // Deduct coins
+    settingsProvider.spendCoins(20);
+
     final player1 = MultiplayerPlayer(
       id: 0,
       name: _p1Controller.text.trim().isEmpty ? 'Player 1' : _p1Controller.text.trim(),
@@ -57,6 +74,9 @@ class _VersusSetupScreenState extends State<VersusSetupScreen> {
         elevation: 2,
         centerTitle: true,
         shadowColor: Colors.black.withOpacity(0.1),
+        actions: [
+          _buildCoinCounter(),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -191,13 +211,50 @@ class _VersusSetupScreenState extends State<VersusSetupScreen> {
           elevation: 4,
           shadowColor: Colors.black.withOpacity(0.3),
         ),
-        child: const Text(
-          'CONTINUE',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
-          ),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'CONTINUE',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.5,
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              '(🪙 20)',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.amber,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCoinCounter() {
+    return Consumer<GameSettingsProvider>(
+      builder: (context, settings, _) => Container(
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          color: Colors.amber.shade100,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          children: [
+            const Text('🪙', style: TextStyle(fontSize: 16)),
+            const SizedBox(width: 4),
+            Text(
+              '${settings.coins}',
+              style: TextStyle(color: Colors.amber.shade900, fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
       ),
     );
