@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'multiplayer_setup_screen.dart';
+import 'versus_setup_screen.dart';
 import 'settings_screen.dart';
 
 class MainMenuScreen extends StatelessWidget {
@@ -84,6 +85,19 @@ class MainMenuScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const MultiplayerSetupScreen()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 20),
+                _buildMenuButton(
+                  context,
+                  title: 'Versus (1 vs 1)',
+                  icon: Icons.bolt,
+                  color: Colors.red,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const VersusSetupScreen()),
                     );
                   },
                 ),
