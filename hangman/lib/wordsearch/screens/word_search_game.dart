@@ -1,8 +1,8 @@
 // lib/wordgame/screens/word_search_game_screen.dart
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:hangman/services/game_setting.dart';
+import 'package:provider/provider.dart';
 import 'package:hangman/audio/audio_manager.dart';
 import 'package:hangman/components/coin_dialogs.dart';
 import '../models/word_search_level.dart';
@@ -339,17 +339,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
     
     AudioManager.playLevelComplete();
     
-    // Award coins for completing level
-    final settingsProvider = Provider.of<GameSettingsProvider>(context, listen: false);
-    settingsProvider.addCoins(30);
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('🎉 Level Complete! +30 coins'),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+  
     
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
@@ -419,8 +409,8 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   childAspectRatio: 2.5,
-                  crossAxisSpacing: 4,
-                  mainAxisSpacing: 4,
+                  crossAxisSpacing: 2,
+                  mainAxisSpacing: 2,
                 ),
                 itemCount: _cluesToShow.length,
                 itemBuilder: (context, index) {
@@ -450,7 +440,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
                       clue,
                       style: TextStyle(
                         color: isFound ? Colors.white : _primaryColor,
-                        fontSize: 14,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                         decoration: isFound ? TextDecoration.lineThrough : null,
                       ),
@@ -661,11 +651,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
                             value: '${_foundWords.length}/${_wordsToFindInGrid.length}',
                             label: 'Words',
                           ),
-                          _buildStatItem(
-                            icon: Icons.monetization_on,
-                            value: '+30',
-                            label: 'Coins',
-                          ),
+                          
                         ],
                       ),
                       const SizedBox(height: 20),
