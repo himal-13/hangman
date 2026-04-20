@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/wordsearch/screens/subject_selection_word_search.dart';
 import 'home_page.dart';
-import 'versus_setup_screen.dart';
+import 'multiplayer_setup_screen.dart';
 import 'settings_screen.dart';
 
 class MainMenuScreen extends StatelessWidget {
@@ -116,14 +116,14 @@ class MainMenuScreen extends StatelessWidget {
                const SizedBox(height: 16),
               _buildMenuButton(
                 context,
-                title: 'Versus',
-                subtitle: '1 vs 1 challenge',
-                icon: Icons.bolt,
-                color: const Color(0xFFEF4444),
+                title: 'Multiplayer',
+                subtitle: 'Play with your friends locally',
+                icon: Icons.people,
+                color: const Color(0xFF8B5CF6),
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const VersusSetupScreen()),
+                    MaterialPageRoute(builder: (context) => const MultiplayerSetupScreen()),
                   );
                 },
               ),

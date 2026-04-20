@@ -37,7 +37,7 @@ class AudioManager {
     }
 
     try {
-      await FlameAudio.play(filename);
+      FlameAudio.play(filename);
     } catch (e, stackTrace) {
       print('Error playing audio "$filename": $e');
       print(stackTrace);
