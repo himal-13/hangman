@@ -4,7 +4,7 @@ import '../models/word_search_subject.dart';
 
 class WordSearchData {
   static final List<WordSearchSubject> easySubjects = [
-    WordSearchSubject(
+    const WordSearchSubject(
       id: 'ws_animals',
       name: 'Animals',
       icon: '🐾',
@@ -17,7 +17,7 @@ class WordSearchData {
         WordSearchLevel(id: 5, name: 'Animals 5', description: 'Exotic animals', gridSize: 8, wordCount: 4, words: ['PANDA', 'KOALA', 'MONKEY', 'RABBIT']),
       ],
     ),
-    WordSearchSubject(
+    const WordSearchSubject(
       id: 'ws_colors',
       name: 'Colors',
       icon: '🌈',
@@ -30,7 +30,7 @@ class WordSearchData {
         WordSearchLevel(id: 5, name: 'Colors 5', description: 'Dark colors', gridSize: 8, wordCount: 4, words: ['MAROON', 'OLIVE', 'TEAL', 'VIOLET']),
       ],
     ),
-    WordSearchSubject(
+    const WordSearchSubject(
       id: 'ws_fruits',
       name: 'Fruits',
       icon: '🍎',
@@ -43,7 +43,7 @@ class WordSearchData {
         WordSearchLevel(id: 5, name: 'Fruits 5', description: 'Tropical fruits', gridSize: 8, wordCount: 4, words: ['GUAVA', 'PAPAYA', 'COCONUT', 'APRICOT']),
       ],
     ),
-    WordSearchSubject(
+    const WordSearchSubject(
       id: 'ws_vehicles',
       name: 'Vehicles',
       icon: '🚗',
@@ -56,7 +56,7 @@ class WordSearchData {
         WordSearchLevel(id: 5, name: 'Vehicles 5', description: 'Heavy vehicles', gridSize: 9, wordCount: 4, words: ['AMBULANCE', 'TRACTOR', 'BICYCLE', 'HELICOPTER']),
       ],
     ),
-    WordSearchSubject(
+    const WordSearchSubject(
       id: 'ws_weather',
       name: 'Weather',
       icon: '☁️',
@@ -72,43 +72,163 @@ class WordSearchData {
   ];
 
   static final List<WordSearchSubject> mediumSubjects = [
-    WordSearchSubject(
+    const WordSearchSubject(
       id: 'ws_antonyms',
       name: 'Antonyms',
       icon: '↔️',
       color: Colors.purple,
       levels: [
-        WordSearchLevel(id: 1, name: 'Antonyms 1', description: 'Opposite words', gridSize: 8, wordCount: 6, words: ['HOT', 'COLD', 'BIG', 'SMALL', 'FAST', 'SLOW']),
-        WordSearchLevel(id: 2, name: 'Antonyms 2', description: 'Directions', gridSize: 9, wordCount: 6, words: ['UP', 'DOWN', 'LEFT', 'RIGHT', 'GOOD', 'BAD']),
-        WordSearchLevel(id: 3, name: 'Antonyms 3', description: 'Emotions', gridSize: 10, wordCount: 6, words: ['HAPPY', 'SAD', 'RICH', 'POOR', 'NEW', 'OLD']),
-        WordSearchLevel(id: 4, name: 'Antonyms 4', description: 'Qualities', gridSize: 10, wordCount: 6, words: ['DARK', 'LIGHT', 'HARD', 'SOFT', 'TRUE', 'FALSE']),
-        WordSearchLevel(id: 5, name: 'Antonyms 5', description: 'Advanced', gridSize: 11, wordCount: 6, words: ['ALWAYS', 'NEVER', 'FIRST', 'LAST', 'SMART', 'DUMB']),
+        WordSearchLevel(
+          id: 1, 
+          name: 'Antonyms 1', 
+          description: 'Find the opposite', 
+          gridSize: 8, 
+          wordCount: 6, 
+          words: ['COLD', 'SMALL', 'SLOW', 'BAD', 'DOWN', 'RIGHT'],
+          clues: {'HOT': 'COLD', 'BIG': 'SMALL', 'FAST': 'SLOW', 'GOOD': 'BAD', 'UP': 'DOWN', 'LEFT': 'RIGHT'},
+        ),
+        WordSearchLevel(
+          id: 2, 
+          name: 'Antonyms 2', 
+          description: 'Find the opposite', 
+          gridSize: 9, 
+          wordCount: 6, 
+          words: ['SHORT', 'LOW', 'DARK', 'SOFT', 'THIN', 'POOR'],
+          clues: {'TALL': 'SHORT', 'HIGH': 'LOW', 'LIGHT': 'DARK', 'HARD': 'SOFT', 'THICK': 'THIN', 'RICH': 'POOR'},
+        ),
+        WordSearchLevel(
+          id: 3, 
+          name: 'Antonyms 3', 
+          description: 'Find the opposite', 
+          gridSize: 10, 
+          wordCount: 6, 
+          words: ['SAD', 'OLD', 'UGLY', 'WEAK', 'DULL', 'FALSE'],
+          clues: {'HAPPY': 'SAD', 'NEW': 'OLD', 'BEAUTIFUL': 'UGLY', 'STRONG': 'WEAK', 'SHARP': 'DULL', 'TRUE': 'FALSE'},
+        ),
+        WordSearchLevel(
+          id: 4, 
+          name: 'Antonyms 4', 
+          description: 'Find the opposite', 
+          gridSize: 10, 
+          wordCount: 6, 
+          words: ['NEVER', 'LAST', 'DUMB', 'TINY', 'EMPTY', 'HATE'],
+          clues: {'ALWAYS': 'NEVER', 'FIRST': 'LAST', 'SMART': 'DUMB', 'HUGE': 'TINY', 'FULL': 'EMPTY', 'LOVE': 'HATE'},
+        ),
+        WordSearchLevel(
+          id: 5, 
+          name: 'Antonyms 5', 
+          description: 'Find the opposite', 
+          gridSize: 11, 
+          wordCount: 6, 
+          words: ['LATE', 'LOUD', 'CRUEL', 'WET', 'FOOL', 'AWAKE'],
+          clues: {'EARLY': 'LATE', 'QUIET': 'LOUD', 'KIND': 'CRUEL', 'DRY': 'WET', 'WISE': 'FOOL', 'ASLEEP': 'AWAKE'},
+        ),
       ],
     ),
-    WordSearchSubject(
+    const WordSearchSubject(
       id: 'ws_synonyms',
       name: 'Synonyms',
       icon: '🔄',
       color: Colors.teal,
       levels: [
-        WordSearchLevel(id: 1, name: 'Synonyms 1', description: 'Similar words', gridSize: 8, wordCount: 6, words: ['BIG', 'LARGE', 'SMALL', 'TINY', 'FAST', 'QUICK']),
-        WordSearchLevel(id: 2, name: 'Synonyms 2', description: 'Feelings', gridSize: 9, wordCount: 6, words: ['GLAD', 'HAPPY', 'SAD', 'UNHAPPY', 'MAD', 'ANGRY']),
-        WordSearchLevel(id: 3, name: 'Synonyms 3', description: 'Actions', gridSize: 10, wordCount: 6, words: ['START', 'BEGIN', 'END', 'FINISH', 'HARD', 'DIFFICULT']),
-        WordSearchLevel(id: 4, name: 'Synonyms 4', description: 'Traits', gridSize: 10, wordCount: 6, words: ['SMART', 'CLEVER', 'BRAVE', 'BOLD', 'KIND', 'NICE']),
-        WordSearchLevel(id: 5, name: 'Synonyms 5', description: 'States', gridSize: 11, wordCount: 6, words: ['RICH', 'WEALTHY', 'POOR', 'NEEDY', 'LOUD', 'NOISY']),
+        WordSearchLevel(
+          id: 1, 
+          name: 'Synonyms 1', 
+          description: 'Find similar words', 
+          gridSize: 8, 
+          wordCount: 6, 
+          words: ['LARGE', 'TINY', 'QUICK', 'GLAD', 'MAD', 'HARD'],
+          clues: {'BIG': 'LARGE', 'SMALL': 'TINY', 'FAST': 'QUICK', 'HAPPY': 'GLAD', 'ANGRY': 'MAD', 'DIFFICULT': 'HARD'},
+        ),
+        WordSearchLevel(
+          id: 2, 
+          name: 'Synonyms 2', 
+          description: 'Find similar words', 
+          gridSize: 9, 
+          wordCount: 6, 
+          words: ['BEGIN', 'FINISH', 'CLEVER', 'BOLD', 'KIND', 'LOUD'],
+          clues: {'START': 'BEGIN', 'END': 'FINISH', 'SMART': 'CLEVER', 'BRAVE': 'BOLD', 'NICE': 'KIND', 'NOISY': 'LOUD'},
+        ),
+        WordSearchLevel(
+          id: 3, 
+          name: 'Synonyms 3', 
+          description: 'Find similar words', 
+          gridSize: 10, 
+          wordCount: 6, 
+          words: ['WEALTHY', 'NEEDY', 'SIMPLE', 'GIFT', 'SILENT', 'VIVID'],
+          clues: {'RICH': 'WEALTHY', 'POOR': 'NEEDY', 'EASY': 'SIMPLE', 'PRESENT': 'GIFT', 'QUIET': 'SILENT', 'BRIGHT': 'VIVID'},
+        ),
+        WordSearchLevel(
+          id: 4, 
+          name: 'Synonyms 4', 
+          description: 'Find similar words', 
+          gridSize: 10, 
+          wordCount: 6, 
+          words: ['AFRAID', 'AWFUL', 'CALM', 'EAGER', 'FAMOUS', 'ODD'],
+          clues: {'SCARED': 'AFRAID', 'TERRIBLE': 'AWFUL', 'PEACEFUL': 'CALM', 'EXCITED': 'EAGER', 'KNOWN': 'FAMOUS', 'STRANGE': 'ODD'},
+        ),
+        WordSearchLevel(
+          id: 5, 
+          name: 'Synonyms 5', 
+          description: 'Find similar words', 
+          gridSize: 11, 
+          wordCount: 6, 
+          words: ['REPLY', 'SELECT', 'STURDY', 'VAGUE', 'WRONG', 'YELL'],
+          clues: {'ANSWER': 'REPLY', 'CHOOSE': 'SELECT', 'STRONG': 'STURDY', 'UNCLEAR': 'VAGUE', 'FALSE': 'WRONG', 'SHOUT': 'YELL'},
+        ),
       ],
     ),
-    WordSearchSubject(
+    const WordSearchSubject(
       id: 'ws_inventions',
       name: 'Inventions',
       icon: '💡',
       color: Colors.deepOrange,
       levels: [
-        WordSearchLevel(id: 1, name: 'Inventions 1', description: 'Early tools', gridSize: 8, wordCount: 4, words: ['WHEEL', 'LIGHT', 'PHONE', 'STEAM']),
-        WordSearchLevel(id: 2, name: 'Inventions 2', description: 'Media', gridSize: 9, wordCount: 4, words: ['RADIO', 'PLANE', 'MOTOR', 'PRINT']),
-        WordSearchLevel(id: 3, name: 'Inventions 3', description: 'Optical', gridSize: 10, wordCount: 4, words: ['CAMERA', 'WATCH', 'GLASS', 'PAPER']),
-        WordSearchLevel(id: 4, name: 'Inventions 4', description: 'Engineering', gridSize: 10, wordCount: 4, words: ['ENGINE', 'COMPASS', 'LASER', 'RADAR']),
-        WordSearchLevel(id: 5, name: 'Inventions 5', description: 'Modern era', gridSize: 11, wordCount: 4, words: ['INTERNET', 'COMPUTER', 'PLASTIC', 'ROCKET']),
+        WordSearchLevel(
+          id: 1, 
+          name: 'Inventions 1', 
+          description: 'Scientist -> Invention', 
+          gridSize: 8, 
+          wordCount: 4, 
+          words: ['PHONE', 'LIGHT', 'PLANE', 'WHEEL'],
+          clues: {'GRAHAM BELL': 'PHONE', 'THOMAS EDISON': 'LIGHT', 'WRIGHT BROS': 'PLANE', 'ANCIENT SUMER': 'WHEEL'},
+        ),
+        WordSearchLevel(
+          id: 2, 
+          name: 'Inventions 2', 
+          description: 'Scientist -> Invention', 
+          gridSize: 9, 
+          wordCount: 4, 
+          words: ['RADIO', 'MOTOR', 'PRINT', 'PEN'],
+          clues: {'MARCONI': 'RADIO', 'NIKOLA TESLA': 'MOTOR', 'GUTENBERG': 'PRINT', 'LASZLO BIRO': 'PEN'},
+        ),
+        WordSearchLevel(
+          id: 3, 
+          name: 'Inventions 3', 
+          description: 'Scientist -> Invention', 
+          gridSize: 10, 
+          wordCount: 4, 
+          words: ['CAMERA', 'WATCH', 'GLASS', 'PAPER'],
+          clues: {'JOSEPH NIEPCE': 'CAMERA', 'PETER HENLEIN': 'WATCH', 'SALVINO': 'GLASS', 'TSAI LUN': 'PAPER'},
+        ),
+        WordSearchLevel(
+          id: 4, 
+          name: 'Inventions 4', 
+          description: 'Scientist -> Invention', 
+          gridSize: 10, 
+          wordCount: 4, 
+          words: ['ENGINE', 'LASER', 'RADAR', 'DYNAMIC'],
+          clues: {'JAMES WATT': 'ENGINE', 'MAIMAN': 'LASER', 'WATSON WATT': 'RADAR', 'ALFRED NOBEL': 'DYNAMIC'},
+        ),
+        WordSearchLevel(
+          id: 5, 
+          name: 'Inventions 5', 
+          description: 'Scientist -> Invention', 
+          gridSize: 11, 
+          wordCount: 4, 
+          words: ['COMPUTER', 'PLASTIC', 'ROCKET', 'INTERNET'],
+          clues: {'CHARLES BABBAGE': 'COMPUTER', 'BAEKELAND': 'PLASTIC', 'GODDARD': 'ROCKET', 'VINT CERF': 'INTERNET'},
+        ),
       ],
     ),
   ];

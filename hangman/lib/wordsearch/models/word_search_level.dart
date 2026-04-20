@@ -6,6 +6,7 @@ class WordSearchLevel {
   final int gridSize;
   final int wordCount;
   final List<String> words;
+  final Map<String, String>? clues; // Map of Clue -> Word to find
 
   const WordSearchLevel({
     required this.id,
@@ -14,5 +15,6 @@ class WordSearchLevel {
     required this.gridSize,
     required this.wordCount,
     required this.words,
+    this.clues,
   });
 }

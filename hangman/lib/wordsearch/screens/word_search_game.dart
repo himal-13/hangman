@@ -32,7 +32,8 @@ class WordSearchGameScreen extends StatefulWidget {
 
 class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
   late int _gridSize;
-  late List<String> _wordsToFind;
+  late List<String> _wordsToFindInGrid;
+  late List<String> _cluesToShow;
   List<List<String>> _grid = [];
   final List<FoundWord> _foundWords = [];
   List<Offset> _currentSelectionPath = [];
@@ -57,7 +58,15 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
 
   void _initializeGame() {
     _gridSize = widget.level.gridSize;
-    _wordsToFind = widget.level.words.map((w) => w.toUpperCase()).toList();
+    
+    if (widget.level.clues != null && widget.level.clues!.isNotEmpty) {
+      _cluesToShow = widget.level.clues!.keys.toList();
+      _wordsToFindInGrid = widget.level.clues!.values.map((w) => w.toUpperCase()).toList();
+    } else {
+      _cluesToShow = widget.level.words.map((w) => w.toUpperCase()).toList();
+      _wordsToFindInGrid = widget.level.words.map((w) => w.toUpperCase()).toList();
+    }
+    
     _generateGrid();
   }
 
@@ -68,7 +77,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
     _isGameComplete = false;
     _showCompletionOverlay = false;
 
-    final wordsToPlace = List<String>.from(_wordsToFind);
+    final wordsToPlace = List<String>.from(_wordsToFindInGrid);
     wordsToPlace.sort((a, b) => b.length.compareTo(a.length));
 
     for (String word in wordsToPlace) {
@@ -250,7 +259,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
     }
 
     String? matchedWord;
-    for (String word in _wordsToFind) {
+    for (String word in _wordsToFindInGrid) {
       if (word == selectedWord) {
         matchedWord = word;
         break;
@@ -264,7 +273,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
         _foundWords.add(FoundWord(matchedWord!, List.from(_currentSelectionPath)));
       });
 
-      if (_foundWords.length == _wordsToFind.length) {
+      if (_foundWords.length == _wordsToFindInGrid.length) {
         _completeGame();
       }
     } else if (_currentSelectionPath.length >= 2) {
@@ -285,7 +294,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
 
     // Find first unfound word
     String? firstUnfoundWord;
-    for (String word in _wordsToFind) {
+    for (String word in _wordsToFindInGrid) {
       if (!_foundWords.any((fw) => fw.word == word)) {
         firstUnfoundWord = word;
         break;
@@ -300,6 +309,8 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
         setState(() {
           _currentSelectionPath = [wordPath.first];
         });
+        
+        AudioManager.playCorrect(); // Play sound when hint is used
         
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -333,7 +344,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
     settingsProvider.addCoins(30);
     
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Text('🎉 Level Complete! +30 coins'),
         backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
@@ -406,15 +417,18 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
               child: GridView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
+                  crossAxisCount: 3,
                   childAspectRatio: 2.5,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 4,
+                  mainAxisSpacing: 4,
                 ),
-                itemCount: _wordsToFind.length,
+                itemCount: _cluesToShow.length,
                 itemBuilder: (context, index) {
-                  final word = _wordsToFind[index];
-                  final isFound = _foundWords.any((fw) => fw.word == word);
+                  final clue = _cluesToShow[index];
+                  final targetWord = widget.level.clues != null 
+                      ? widget.level.clues![clue]?.toUpperCase() 
+                      : clue;
+                  final isFound = _foundWords.any((fw) => fw.word == targetWord);
                   return Container(
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
@@ -433,7 +447,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
                       ],
                     ),
                     child: Text(
-                      word,
+                      clue,
                       style: TextStyle(
                         color: isFound ? Colors.white : _primaryColor,
                         fontSize: 14,
@@ -644,7 +658,7 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
                           ),
                           _buildStatItem(
                             icon: Icons.done_all,
-                            value: '${_foundWords.length}/${_wordsToFind.length}',
+                            value: '${_foundWords.length}/${_wordsToFindInGrid.length}',
                             label: 'Words',
                           ),
                           _buildStatItem(

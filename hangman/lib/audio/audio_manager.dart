@@ -1,42 +1,38 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 ///
-/// Call `FlutterAudioManager.load()` to pre-cache the sounds before playing.
+/// Call `AudioManager.load()` to pre-cache the sounds before playing.
 /// Then, you can call the static methods from anywhere in your app:
-/// `FlutterAudioManager.playSuccess();`
-/// `FlutterAudioManager.playFailed();`
+/// `AudioManager.playSuccess();`
+/// `AudioManager.playFailed();`
 class AudioManager {
-  static final AudioPlayer _player = AudioPlayer();
   static bool _soundOn = true; // Add a static boolean to track the sound state
 
   /// Pre-caches all audio files used by the manager for instant playback.
   static Future<void> load() async {
-    // await AudioPlayer().setSource(AssetSource('audio/success.mp3'));
-    // await AudioPlayer().setSource(AssetSource('audio/failed.mp3'));
-
-    await AudioPlayer().setSource(AssetSource('audio/picked.mp3'));
-    await AudioPlayer().setSource(AssetSource('audio/failed.mp3'));
-    await AudioPlayer().setSource(AssetSource('audio/level-complete.mp3'));
+    await FlameAudio.audioCache.loadAll([
+      'picked.wav',
+      'failed.wav',
+      'level-complete.wav',
+    ]);
   }
 
- 
   /// Plays the 'level-complete' sound effect from your assets.
   static void playLevelComplete() {
     if (_soundOn) { // Check if sound is on before playing
-      _player.play(AssetSource('audio/level-complete.mp3'));
+      FlameAudio.play('level-complete.wav');
     }
   }
-
-
 
   static void playCorrect() {
     if (_soundOn) { // Check if sound is on before playing
-      _player.play(AssetSource('audio/picked.mp3'));
+      FlameAudio.play('picked.wav');
     }
   }
+
   static void playWrong() {
     if (_soundOn) { // Check if sound is on before playing
-      _player.play(AssetSource('audio/failed.mp3'));
+      FlameAudio.play('failed.wav');
     }
   }
 
@@ -49,9 +45,9 @@ class AudioManager {
   static bool get isSoundOn => _soundOn;
 
   /// Releases the audio player's resources.
-  ///
-  /// Call this when the app is being closed to free up resources.
   static void dispose() {
-    _player.dispose();
+    // FlameAudio handles internal players efficiently, 
+    // but we can stop all if needed on global dispose.
+    FlameAudio.bgm.stop();
   }
 }
