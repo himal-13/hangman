@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hangman/wordsearch/screens/subject_selection_word_search.dart';
 import 'home_page.dart';
-import 'multiplayer_setup_screen.dart';
 import 'versus_setup_screen.dart';
 import 'settings_screen.dart';
 
@@ -99,6 +99,20 @@ class MainMenuScreen extends StatelessWidget {
                   );
                 },
               ),
+                        const SizedBox(height: 16),
+        _buildMenuButton(
+            context,
+            title: 'Word Search',
+            subtitle: 'Find hidden words in the grid',
+            icon: Icons.grid_on,
+            color: Colors.teal,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const WordSearchSubjectSelectionScreen()),
+              );
+            },
+          ),
                const SizedBox(height: 16),
               _buildMenuButton(
                 context,
@@ -113,20 +127,7 @@ class MainMenuScreen extends StatelessWidget {
                   );
                 },
               ),
-              const SizedBox(height: 16),
-              _buildMenuButton(
-                context,
-                title: 'Multiplayer',
-                subtitle: 'Up to 4 friends',
-                icon: Icons.people,
-                color: const Color(0xFFF59E0B),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MultiplayerSetupScreen()),
-                  );
-                },
-              ),
+    
              
               const SizedBox(height: 32),
             ],
