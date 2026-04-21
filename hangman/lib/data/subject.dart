@@ -70,7 +70,7 @@ class SubjectsData {
     ),
   ];
 
-  // Medium Mode Subjects - More complex words (4 subjects)
+  // Medium Mode Subjects - More complex words (6 subjects - added 2 new)
   static List<Subject> mediumSubjects = [
     Subject(
       id: 'cities',
@@ -136,9 +136,43 @@ class SubjectsData {
       },
       color: Colors.red,
     ),
+    // NEW MEDIUM SUBJECT 1: Music
+    Subject(
+      id: 'music',
+      name: 'Music',
+      icon: '🎵',
+      words: [
+        'GUITAR', 'PIANO', 'VIOLIN', 'DRUMS', 'FLUTE', 'TRUMPET', 'SAXOPHONE', 'CELLO',
+        'HARMONY', 'MELODY', 'RHYTHM', 'TEMPO', 'CHORD', 'SCALE', 'OCTAVE', 'SYMPHONY',
+        'JAZZ', 'ROCK', 'CLASSICAL', 'POP', 'BLUES', 'FOLK', 'REGGAE', 'METAL'
+      ],
+      wordHints: {
+        'GUITAR': 'String instrument with frets', 'PIANO': 'Keyboard instrument with hammers', 'VIOLIN': 'Small string instrument played with bow', 'DRUMS': 'Percussion instrument', 'FLUTE': 'Woodwind instrument', 'TRUMPET': 'Brass instrument', 'SAXOPHONE': 'Jazz brass instrument', 'CELLO': 'Large string instrument',
+        'HARMONY': 'Combining musical notes', 'MELODY': 'Sequence of musical notes', 'RHYTHM': 'Pattern of beats', 'TEMPO': 'Speed of music', 'CHORD': 'Three or more notes together', 'SCALE': 'Sequence of ascending notes', 'OCTAVE': 'Eight notes apart', 'SYMPHONY': 'Large orchestral composition',
+        'JAZZ': 'Genre with improvisation', 'ROCK': 'Genre with electric guitars', 'CLASSICAL': 'Formal orchestral music', 'POP': 'Popular mainstream music', 'BLUES': 'Emotional genre with 12-bar form', 'FOLK': 'Traditional acoustic music', 'REGGAE': 'Jamaican rhythm genre', 'METAL': 'Heavy distorted guitar genre'
+      },
+      color: Colors.cyan,
+    ),
+    // NEW MEDIUM SUBJECT 2: Weather
+    Subject(
+      id: 'weather',
+      name: 'Weather',
+      icon: '🌤️',
+      words: [
+        'SUNNY', 'RAINY', 'CLOUDY', 'STORMY', 'WINDY', 'SNOWY', 'FOGGY', 'HUMID',
+        'THUNDER', 'LIGHTNING', 'HURRICANE', 'TORNADO', 'TYPHOON', 'MONSOON', 'BLIZZARD', 'HAILSTORM',
+        'TEMPERATURE', 'HUMIDITY', 'BAROMETER', 'FORECAST', 'CUMULUS', 'CIRRUS', 'STRATUS', 'FRONT'
+      ],
+      wordHints: {
+        'SUNNY': 'Bright sun, no clouds', 'RAINY': 'Water falling from sky', 'CLOUDY': 'Sky covered with clouds', 'STORMY': 'Thunder and lightning', 'WINDY': 'Strong air movement', 'SNOWY': 'Frozen crystals falling', 'FOGGY': 'Thick low cloud', 'HUMID': 'Moist air',
+        'THUNDER': 'Sound from lightning', 'LIGHTNING': 'Electrical discharge in sky', 'HURRICANE': 'Large tropical storm', 'TORNADO': 'Violent rotating column of air', 'TYPHOON': 'Pacific hurricane', 'MONSOON': 'Seasonal heavy rain', 'BLIZZARD': 'Severe snowstorm', 'HAILSTORM': 'Ice balls falling',
+        'TEMPERATURE': 'How hot or cold', 'HUMIDITY': 'Amount of water in air', 'BAROMETER': 'Measures air pressure', 'FORECAST': 'Weather prediction', 'CUMULUS': 'Fluffy white clouds', 'CIRRUS': 'High thin wispy clouds', 'STRATUS': 'Layered gray clouds', 'FRONT': 'Boundary between air masses'
+      },
+      color: Colors.lightBlue,
+    ),
   ];
 
-  // Hard Mode Subjects - Complex, specialized terms (4 subjects)
+  // Hard Mode Subjects - Complex, specialized terms (6 subjects - added 2 new)
   static List<Subject> hardSubjects = [
     Subject(
       id: 'science',
@@ -203,6 +237,40 @@ class SubjectsData {
         'NYCTOPHOBIA': 'Fear of darkness', 'APHANTASIA': 'Inability to visualize', 'ANEMOI': 'Wind spirits', 'NEBULOUS': 'Vague or unclear', 'INEFFABLE': 'Too great for words', 'PENUMBRA': 'Partial shadow', 'LIMERENCE': 'Romantic obsession', 'SUSURRUS': 'Whispering sound'
       },
       color: Colors.amber.shade800,
+    ),
+    // NEW HARD SUBJECT 1: Medicine & Anatomy
+    Subject(
+      id: 'medicine',
+      name: 'Medicine',
+      icon: '💊',
+      words: [
+        'DIAGNOSIS', 'PROGNOSIS', 'SYMPTOM', 'THERAPY', 'SURGERY', 'PRESCRIPTION', 'ANTIBIOTIC', 'ANESTHESIA',
+        'PATHOGEN', 'INFLAMMATION', 'IMMUNITY', 'CHRONIC', 'ACUTE', 'BENIGN', 'MALIGNANT', 'METASTASIS',
+        'PLACEBO', 'CONTRAINDICATION', 'HISTOLOGY', 'BIopsy', 'HEMATOMA', 'ISCHEMIA', 'EDEMA', 'SEPSIS'
+      ],
+      wordHints: {
+        'DIAGNOSIS': 'Identifying a disease', 'PROGNOSIS': 'Predicted outcome', 'SYMPTOM': 'Sign of illness', 'THERAPY': 'Treatment', 'SURGERY': 'Operative procedure', 'PRESCRIPTION': 'Doctor\'s order for medicine', 'ANTIBIOTIC': 'Kills bacteria', 'ANESTHESIA': 'Loss of sensation',
+        'PATHOGEN': 'Disease-causing organism', 'INFLAMMATION': 'Body\'s response to injury', 'IMMUNITY': 'Protection from disease', 'CHRONIC': 'Long-lasting condition', 'ACUTE': 'Sudden severe onset', 'BENIGN': 'Non-cancerous', 'MALIGNANT': 'Cancerous', 'METASTASIS': 'Cancer spreading',
+        'PLACEBO': 'Fake treatment', 'CONTRAINDICATION': 'Reason not to treat', 'HISTOLOGY': 'Study of tissues', 'BIOPSY': 'Tissue sample', 'HEMATOMA': 'Pooled blood', 'ISCHEMIA': 'Lack of blood flow', 'EDEMA': 'Fluid swelling', 'SEPSIS': 'Life-threatening infection response'
+      },
+      color: Colors.red.shade700,
+    ),
+    // NEW HARD SUBJECT 2: Astronomy
+    Subject(
+      id: 'astronomy',
+      name: 'Astronomy',
+      icon: '🌌',
+      words: [
+        'GALAXY', 'NEBULA', 'SUPERNOVA', 'BLACK HOLE', 'QUASAR', 'PULSAR', 'ASTEROID', 'COMET',
+        'EXOPLANET', 'RED GIANT', 'WHITE DWARF', 'NEUTRON STAR', 'DARK MATTER', 'DARK ENERGY', 'COSMIC MICROWAVE', 'GRAVITATIONAL WAVE',
+        'ORION', 'ANDROMEDA', 'SIRIUS', 'BETELGEUSE', 'POLARIS', 'VEGA', 'ANTARES', 'PROXIMA CENTAURI'
+      ],
+      wordHints: {
+        'GALAXY': 'Billions of stars bound by gravity', 'NEBULA': 'Cloud of gas and dust', 'SUPERNOVA': 'Exploding star', 'BLACK HOLE': 'Infinite density, light cannot escape', 'QUASAR': 'Bright active galaxy core', 'PULSAR': 'Rotating neutron star emitting beams', 'ASTEROID': 'Rocky minor planet', 'COMET': 'Icy body with tail near sun',
+        'EXOPLANET': 'Planet orbiting other stars', 'RED GIANT': 'Large dying star', 'WHITE DWARF': 'Dense stellar remnant', 'NEUTRON STAR': 'Incredibly dense collapsed core', 'DARK MATTER': 'Invisible gravitational mass', 'DARK ENERGY': 'Unknown accelerating expansion', 'COSMIC MICROWAVE': 'Background radiation from Big Bang', 'GRAVITATIONAL WAVE': 'Ripples in spacetime',
+        'ORION': 'Hunter constellation', 'ANDROMEDA': 'Nearest spiral galaxy', 'SIRIUS': 'Brightest night star', 'BETELGEUSE': 'Red supergiant in Orion', 'POLARIS': 'North Star', 'VEGA': 'Bright star in Lyra', 'ANTARES': 'Red supergiant in Scorpius', 'PROXIMA CENTAURI': 'Closest star to Sun'
+      },
+      color: Colors.blueGrey,
     ),
   ];
 
