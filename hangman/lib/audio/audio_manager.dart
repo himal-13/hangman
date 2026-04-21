@@ -5,6 +5,10 @@ class AudioManager {
   static bool _isMuted = false;
   static const _audioPrefix = 'assets/audio/';
 
+  static AudioPool? _pickedPool;
+  static AudioPool? _failedPool;
+  static AudioPool? _levelCompletePool;
+
   /// Preloads all sound effects into the audio cache to eliminate lag and
   /// late playing during gameplay.
   static Future<void> load() async {
@@ -15,6 +19,10 @@ class AudioManager {
         'failed.wav',
         'level-complete.wav',
       ]);
+
+      _pickedPool = await FlameAudio.createPool('picked.wav', minPlayers: 2, maxPlayers: 4);
+      _failedPool = await FlameAudio.createPool('failed.wav', minPlayers: 2, maxPlayers: 4);
+      _levelCompletePool = await FlameAudio.createPool('level-complete.wav', minPlayers: 1, maxPlayers: 2);
 
       final prefs = await SharedPreferences.getInstance();
       _isMuted = prefs.getBool('sound_muted') ?? false;
@@ -31,13 +39,17 @@ class AudioManager {
     _isMuted = prefs.getBool('sound_muted') ?? false;
   }
 
-  static Future<void> _playSound(String filename) async {
+  static Future<void> _playSound(String filename, AudioPool? pool) async {
     if (_isMuted) {
       return;
     }
 
     try {
-      FlameAudio.play(filename);
+      if (pool != null) {
+        pool.start();
+      } else {
+        FlameAudio.play(filename);
+      }
     } catch (e, stackTrace) {
       print('Error playing audio "$filename": $e');
       print(stackTrace);
@@ -46,16 +58,16 @@ class AudioManager {
 
   /// Plays the "correct" sound effect (picked.wav).
   static void playCorrect() {
-    _playSound('picked.wav');
+    _playSound('picked.wav', _pickedPool);
   }
 
   /// Plays the "wrong" sound effect (failed.wav).
   static void playWrong() {
-    _playSound('failed.wav');
+    _playSound('failed.wav', _failedPool);
   }
 
   /// Plays the "level complete" sound effect (level-complete.wav).
   static void playLevelComplete() {
-    _playSound('level-complete.wav');
+    _playSound('level-complete.wav', _levelCompletePool);
   }
 }
