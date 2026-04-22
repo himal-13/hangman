@@ -227,13 +227,13 @@ class SubjectsData {
       name: 'Rare Words',
       icon: '📖',
       words: [
-        'SERENDIPITY', 'MELANCHOLY', 'EPHEMERAL', 'LUMINESCENT', 'ETEREAL', 'QUINTESSENTIAL', 'SYZYGY', 'PETRICHOR',
-        'DEFENESTRATION', 'SESQUIPEDALIAN', 'FLIBBERTIGIBBET', 'CODDIWOMPLE', 'CATAWAMPUS', 'KERFUFFLE', 'BUMFUZZLE', 'SNOOLYGOSTER',
+        'SERENDIPITY', 'MELANCHOLY', 'EPHEMERAL', 'LUMINESCENT', 'ETHEREAL', 'QUINTESSENTIAL', 'SYZYGY', 'PETRICHOR',
+        'DEFENESTRATION', 'SESQUIPEDALIAN', 'FLIBBERTIGIBBET', 'CODDIWOMPLE', 'CATAWAMPUS', 'KERFUFFLE', 'BUMFUZZLE', 'SNOLLYGOSTER',
         'NYCTOPHOBIA', 'APHANTASIA', 'ANEMOI', 'NEBULOUS', 'INEFFABLE', 'PENUMBRA', 'LIMERENCE', 'SUSURRUS'
       ],
       wordHints: {
-        'SERENDIPITY': 'Fortunate accident', 'MELANCHOLY': 'Deep sadness', 'EPHEMERAL': 'Lasting a short time', 'LUMINESCENT': 'Glowing without heat', 'ETEREAL': 'Extremely delicate', 'QUINTESSENTIAL': 'Perfect example', 'SYZYGY': 'Celestial bodies in line', 'PETRICHOR': 'Smell after rain',
-        'DEFENESTRATION': 'Throwing out a window', 'SESQUIPEDALIAN': 'Long word or using long words', 'FLIBBERTIGIBBET': 'Nonsense talker', 'CODDIWOMPLE': 'To defeat thoroughly', 'CATAWAMPUS': 'Askew or diagonal', 'KERFUFFLE': 'Disturbance or fuss', 'BUMFUZZLE': 'To confuse', 'SNOOLYGOSTER': 'Hypocritical person',
+        'SERENDIPITY': 'Fortunate accident', 'MELANCHOLY': 'Deep sadness', 'EPHEMERAL': 'Lasting a short time', 'LUMINESCENT': 'Glowing without heat', 'ETHEREAL': 'Extremely delicate', 'QUINTESSENTIAL': 'Perfect example', 'SYZYGY': 'Celestial bodies in line', 'PETRICHOR': 'Smell after rain',
+        'DEFENESTRATION': 'Throwing out a window', 'SESQUIPEDALIAN': 'Long word or using long words', 'FLIBBERTIGIBBET': 'Nonsense talker', 'CODDIWOMPLE': 'To travel purposefully to a vague destination', 'CATAWAMPUS': 'Askew or diagonal', 'KERFUFFLE': 'Disturbance or fuss', 'BUMFUZZLE': 'To confuse', 'SNOLLYGOSTER': 'Hypocritical person',
         'NYCTOPHOBIA': 'Fear of darkness', 'APHANTASIA': 'Inability to visualize', 'ANEMOI': 'Wind spirits', 'NEBULOUS': 'Vague or unclear', 'INEFFABLE': 'Too great for words', 'PENUMBRA': 'Partial shadow', 'LIMERENCE': 'Romantic obsession', 'SUSURRUS': 'Whispering sound'
       },
       color: Colors.amber.shade800,

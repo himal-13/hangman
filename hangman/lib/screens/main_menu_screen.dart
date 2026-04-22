@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hangman/wordsearch/screens/subject_selection_word_search.dart';
+import '../wordle/screens/wordle_level_selection_screen.dart';
 import 'home_page.dart';
 import 'multiplayer_setup_screen.dart';
 import 'settings_screen.dart';
@@ -100,7 +101,7 @@ class MainMenuScreen extends StatelessWidget {
                 },
               ),
                         const SizedBox(height: 16),
-        _buildMenuButton(
+         _buildMenuButton(
             context,
             title: 'Word Search',
             subtitle: 'Find hidden words in the grid',
@@ -113,7 +114,21 @@ class MainMenuScreen extends StatelessWidget {
               );
             },
           ),
-               const SizedBox(height: 16),
+          const SizedBox(height: 16),
+          _buildMenuButton(
+            context,
+            title: 'Word Guess',
+            subtitle: 'Guess the word from scrambled letters',
+            icon: Icons.spellcheck,
+            color: Colors.orange,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const WordleLevelSelectionScreen()),
+              );
+            },
+          ),
+          const SizedBox(height: 16),
               _buildMenuButton(
                 context,
                 title: 'Multiplayer',
