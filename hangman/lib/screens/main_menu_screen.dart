@@ -65,85 +65,90 @@ class MainMenuScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-             // Menu Buttons Section
+                // Menu Buttons Section - 2 per row
                 Expanded(
                   flex: 3,
-                  child: ListView(
-                    physics: const BouncingScrollPhysics(),
-                    children: [
-                      _buildWarmMenuButton(
-                        context,
-                        title: 'Hangman',
-                        subtitle: 'Classic word guessing game',
-                        icon: Icons.games,
-                        color: const Color(0xFFE8925C),
-                        lightColor: const Color(0xFFFDE8DD),
-                        onTap: () {
-                          Navigator.push(
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 600),
+                      child: GridView.count(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 14,
+                        crossAxisSpacing: 14,
+                        childAspectRatio: 1.1,
+                        physics: const BouncingScrollPhysics(),
+                        children: [
+                          _buildWarmMenuButton(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const HomeScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 14),
-                      _buildWarmMenuButton(
-                        context,
-                        title: 'Word Search',
-                        subtitle: 'Find hidden words in the grid',
-                        icon: Icons.grid_on,
-                        color: const Color(0xFF8FB3A5),
-                        lightColor: const Color(0xFFE8F0EC),
-                        onTap: () {
-                          Navigator.push(
+                            title: 'Hangman',
+                            subtitle: '',
+                            icon: Icons.games,
+                            color: const Color(0xFFE8925C),
+                            lightColor: const Color(0xFFFDE8DD),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const HomeScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                          _buildWarmMenuButton(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const WordSearchSubjectSelectionScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 14),
-                      _buildWarmMenuButton(
-                        context,
-                        title: 'Word Guess',
-                        subtitle: 'Continue the latest unlocked level',
-                        icon: Icons.spellcheck,
-                        color: const Color(0xFFD4A373),
-                        lightColor: const Color(0xFFFDF3E8),
-                        onTap: () {
-                          final navigator = Navigator.of(context);
-                          WordleProgress.getLatestUnlockedLevel().then((levelNumber) {
-                            final level = WordleLevelData.levels[levelNumber - 1];
-                            navigator.push(
-                              MaterialPageRoute(
-                                builder: (_) => WordleGameScreen(level: level),
-                              ),
-                            );
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 14),
-                      _buildWarmMenuButton(
-                        context,
-                        title: 'Multiplayer',
-                        subtitle: 'Challenge your friends locally',
-                        icon: Icons.people,
-                        color: const Color(0xFFC9A87C),
-                        lightColor: const Color(0xFFFBF5EB),
-                        onTap: () {
-                          Navigator.push(
+                            title: 'Word Search',
+                            subtitle: '',
+                            icon: Icons.grid_on,
+                            color: const Color(0xFF8FB3A5),
+                            lightColor: const Color(0xFFE8F0EC),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const WordSearchSubjectSelectionScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                          _buildWarmMenuButton(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const MultiplayerSetupScreen(),
-                            ),
-                          );
-                        },
+                            title: 'Word Guess',
+                            subtitle: '',
+                            icon: Icons.spellcheck,
+                            color: const Color(0xFFD4A373),
+                            lightColor: const Color(0xFFFDF3E8),
+                            onTap: () {
+                              final navigator = Navigator.of(context);
+                              WordleProgress.getLatestUnlockedLevel().then((levelNumber) {
+                                final level = WordleLevelData.levels[levelNumber - 1];
+                                navigator.push(
+                                  MaterialPageRoute(
+                                    builder: (_) => WordleGameScreen(level: level),
+                                  ),
+                                );
+                              });
+                            },
+                          ),
+                          _buildWarmMenuButton(
+                            context,
+                            title: 'Multiplayer',
+                            subtitle: '',
+                            icon: Icons.people,
+                            color: const Color(0xFFC9A87C),
+                            lightColor: const Color(0xFFFBF5EB),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MultiplayerSetupScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 32),
-                    ],
+                    ),
                   ),
                 ),
               ],
@@ -180,7 +185,7 @@ class MainMenuScreen extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(24),
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(24),
@@ -192,10 +197,10 @@ class MainMenuScreen extends StatelessWidget {
                 ),
               ],
             ),
-            child: Row(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: const EdgeInsets.all(8),
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
                     color: lightColor,
@@ -204,47 +209,31 @@ class MainMenuScreen extends StatelessWidget {
                   child: Icon(
                     icon,
                     color: color,
-                    size: 28,
+                    size: 32,
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF5C4033),
-                          letterSpacing: -0.3,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        subtitle,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Color(0xFF9B7B62),
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                    ],
+                const SizedBox(height: 12),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF5C4033),
+                    letterSpacing: -0.3,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                Container(
-                  margin: const EdgeInsets.only(right: 16),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: lightColor,
-                    borderRadius: BorderRadius.circular(14),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFF9B7B62),
+                    letterSpacing: 0.2,
                   ),
-                  child: Icon(
-                    Icons.arrow_forward_rounded,
-                    color: color,
-                    size: 20,
-                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

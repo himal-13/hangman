@@ -429,7 +429,7 @@ class _GameScreenState extends State<GameScreen> {
                 
                 // Action buttons
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _buildDialogButton(
                       icon: Icons.play_arrow_rounded,
@@ -440,16 +440,7 @@ class _GameScreenState extends State<GameScreen> {
                         Navigator.pop(context);
                         _nextWord();
                       },
-                    ),
-                    _buildDialogButton(
-                      icon: Icons.home_rounded,
-                      label: 'MENU',
-                      color: Colors.white.withOpacity(0.3),
-                      textColor: Colors.white,
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
+                      isFullWidth: true,
                     ),
                   ],
                 ),

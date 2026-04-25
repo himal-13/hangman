@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hangman/audio/audio_manager.dart';
 import 'package:hangman/services/wordle_progress.dart';
+import 'package:hangman/services/game_setting.dart';
+import 'package:hangman/components/coin_dialogs.dart';
 import '../data/wordle_level_data.dart';
 import '../models/wordle_multi_game_state.dart';
 
@@ -61,6 +63,30 @@ class _GameContentState extends State<_GameContent> {
         elevation: 1,
         centerTitle: true,
         actions: [
+          Consumer<GameSettingsProvider>(
+            builder: (context, settings, _) => Container(
+              margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                children: [
+                  const Text('🪙', style: TextStyle(fontSize: 14)),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${settings.coins}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           Container(
             margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -406,69 +432,132 @@ class _GameContentState extends State<_GameContent> {
 
   // ── Action Buttons ────────────────────────────────────────────────────────
 
+  void _handleHint(BuildContext context, WordleMultiGameState state) {
+    final settingsProvider = Provider.of<GameSettingsProvider>(context, listen: false);
+    
+    if (settingsProvider.coins >= 5) {
+      settingsProvider.spendCoins(5);
+      state.revealWord();
+      AudioManager.playCorrect();
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('💡 Word revealed! (-5 coins)'),
+          backgroundColor: Colors.amber,
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else {
+      CoinDialogs.showNotEnoughCoinsDialog(
+        context: context,
+        settingsProvider: settingsProvider,
+      );
+    }
+  }
+
   Widget _buildActions(WordleMultiGameState state) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: Row(
+      child: Column(
         children: [
-          Expanded(
-            child: ElevatedButton.icon(
-              onPressed: state.removeLetter,
-              icon: const Icon(Icons.backspace_outlined, size: 18),
-              label: const Text(
-                'DELETE',
-                style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.grey.shade700,
-                elevation: 1,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  side: BorderSide(color: Colors.grey.shade300, width: 1.5),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            flex: 2,
-            child: ElevatedButton.icon(
-                      onPressed: () {
-                final ok = state.submitWord();
-                if (ok) {
-                  AudioManager.playCorrect();
-                }
-                if (!ok && state.lastSubmitWrong) {
-                  AudioManager.playWrong();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Not quite right – try again!'),
-                      backgroundColor: Colors.red.shade600,
-                      duration: const Duration(seconds: 1),
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: state.removeLetter,
+                  icon: const Icon(Icons.backspace_outlined, size: 18),
+                  label: const Text(
+                    'DELETE',
+                    style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.grey.shade700,
+                    elevation: 1,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      side: BorderSide(color: Colors.grey.shade300, width: 1.5),
                     ),
-                  );
-                }
-              },
-              icon: const Icon(Icons.check_circle_outline_rounded, size: 20),
-              label: const Text(
-                'SUBMIT',
-                style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _accentColor,
-                foregroundColor: Colors.white,
-                elevation: 2,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  ),
                 ),
               ),
-            ),
+              const SizedBox(width: 12),
+              Expanded(
+                flex: 2,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    final ok = state.submitWord();
+                    if (ok) {
+                      AudioManager.playCorrect();
+                    }
+                    if (!ok && state.lastSubmitWrong) {
+                      AudioManager.playWrong();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text('Not quite right – try again!'),
+                          backgroundColor: Colors.red.shade600,
+                          duration: const Duration(seconds: 1),
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                      );
+                    }
+                  },
+                  icon: const Icon(Icons.check_circle_outline_rounded, size: 20),
+                  label: const Text(
+                    'SUBMIT',
+                    style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _accentColor,
+                    foregroundColor: Colors.white,
+                    elevation: 2,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Consumer<GameSettingsProvider>(
+            builder: (context, settings, child) {
+              final hasEnoughCoins = settings.coins >= 5;
+              return SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => _handleHint(context, state),
+                  icon: const Icon(Icons.lightbulb_outline, size: 20),
+                  label: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('HINT'),
+                      const SizedBox(width: 8),
+                      Text(
+                        '5🪙',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amber,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -602,6 +691,7 @@ class _GameContentState extends State<_GameContent> {
               const SizedBox(height: 20),
 
               // Action buttons
+              // Action buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -642,41 +732,57 @@ class _GameContentState extends State<_GameContent> {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Material(
-                        color: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(30),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                          },
-                          borderRadius: BorderRadius.circular(30),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            alignment: Alignment.center,
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.home_rounded,
-                                    size: 20, color: Colors.white),
-                                SizedBox(width: 5),
-                                Text(
-                                  'MENU',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
+                  Builder(
+                    builder: (context) {
+                      final currentIndex = WordleLevelData.levels.indexWhere((l) => l.levelNumber == state.level.levelNumber);
+                      final hasNextLevel = currentIndex != -1 && currentIndex + 1 < WordleLevelData.levels.length;
+                      
+                      return Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Material(
+                            color: Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(30),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                                if (hasNextLevel) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => WordleGameScreen(level: WordleLevelData.levels[currentIndex + 1]),
+                                    ),
+                                  );
+                                } else {
+                                  Navigator.of(context).pop();
+                                }
+                              },
+                              borderRadius: BorderRadius.circular(30),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                alignment: Alignment.center,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(hasNextLevel ? Icons.play_arrow_rounded : Icons.home_rounded,
+                                        size: 20, color: Colors.white),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      hasNextLevel ? 'NEXT' : 'MENU',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                 ],
               ),

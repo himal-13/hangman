@@ -106,6 +106,12 @@ class WordleMultiGameState extends ChangeNotifier {
     }
   }
 
+  void revealWord() {
+    final targetWord = level.words[selectedWordIndex];
+    currentInput = targetWord;
+    submitWord();
+  }
+
   void reset() {
     _initGame();
     notifyListeners();
