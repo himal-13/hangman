@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hangman/wordle/screens/wordle_game_screen.dart';
+import 'package:hangman/services/wordle_progress.dart';
+import 'package:hangman/wordle/data/wordle_level_data.dart';
 import 'package:hangman/wordsearch/screens/subject_selection_word_search.dart';
-import '../wordle/screens/wordle_level_selection_screen.dart';
 import 'home_page.dart';
 import 'multiplayer_setup_screen.dart';
 import 'settings_screen.dart';
@@ -11,208 +13,242 @@ class MainMenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        toolbarHeight: 60,
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.08),
-                  blurRadius: 6,
-                  offset: const Offset(0, 1),
-                )
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFFFF5EB), // Warm cream top
+              Color(0xFFFFF0E6), // Soft warm peach
+              Color(0xFFFEF3E8), // Light warm base
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              children: [
+                // Custom App Bar
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFFE2D4C8).withOpacity(0.5),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.settings_outlined,
+                            color: Color(0xFF8B6B4D),
+                            size: 22,
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SettingsScreen(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+             // Menu Buttons Section
+                Expanded(
+                  flex: 3,
+                  child: ListView(
+                    physics: const BouncingScrollPhysics(),
+                    children: [
+                      _buildWarmMenuButton(
+                        context,
+                        title: 'Hangman',
+                        subtitle: 'Classic word guessing game',
+                        icon: Icons.games,
+                        color: const Color(0xFFE8925C),
+                        lightColor: const Color(0xFFFDE8DD),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 14),
+                      _buildWarmMenuButton(
+                        context,
+                        title: 'Word Search',
+                        subtitle: 'Find hidden words in the grid',
+                        icon: Icons.grid_on,
+                        color: const Color(0xFF8FB3A5),
+                        lightColor: const Color(0xFFE8F0EC),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const WordSearchSubjectSelectionScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 14),
+                      _buildWarmMenuButton(
+                        context,
+                        title: 'Word Guess',
+                        subtitle: 'Continue the latest unlocked level',
+                        icon: Icons.spellcheck,
+                        color: const Color(0xFFD4A373),
+                        lightColor: const Color(0xFFFDF3E8),
+                        onTap: () {
+                          final navigator = Navigator.of(context);
+                          WordleProgress.getLatestUnlockedLevel().then((levelNumber) {
+                            final level = WordleLevelData.levels[levelNumber - 1];
+                            navigator.push(
+                              MaterialPageRoute(
+                                builder: (_) => WordleGameScreen(level: level),
+                              ),
+                            );
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 14),
+                      _buildWarmMenuButton(
+                        context,
+                        title: 'Multiplayer',
+                        subtitle: 'Challenge your friends locally',
+                        icon: Icons.people,
+                        color: const Color(0xFFC9A87C),
+                        lightColor: const Color(0xFFFBF5EB),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const MultiplayerSetupScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 32),
+                    ],
+                  ),
+                ),
               ],
             ),
-            child: IconButton(
-              icon: const Icon(Icons.settings_outlined, size: 22, color: Color(0xFF475569)),
-              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen())),
-            ),
-          )
-        ],
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 16),
-              // Logo
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.blue.shade50, Colors.indigo.shade50],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  shape: BoxShape.circle,
-                ),
-                child: const Text('🎯', style: TextStyle(fontSize: 64)),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Hangman',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFF1E293B),
-                  letterSpacing: -0.5,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEFF6FF),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Text(
-                  '4 Player',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF3B82F6),
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 40),
-              // Menu Buttons
-              _buildMenuButton(
-                context,
-                title: 'Subject',
-                subtitle: 'Play Subject based Hangman',
-                icon: Icons.person,
-                color: const Color(0xFF3B82F6),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
-                  );
-                },
-              ),
-                        const SizedBox(height: 16),
-         _buildMenuButton(
-            context,
-            title: 'Word Search',
-            subtitle: 'Find hidden words in the grid',
-            icon: Icons.grid_on,
-            color: Colors.teal,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const WordSearchSubjectSelectionScreen()),
-              );
-            },
-          ),
-          const SizedBox(height: 16),
-          _buildMenuButton(
-            context,
-            title: 'Word Guess',
-            subtitle: 'Guess the word from scrambled letters',
-            icon: Icons.spellcheck,
-            color: Colors.orange,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const WordleLevelSelectionScreen()),
-              );
-            },
-          ),
-          const SizedBox(height: 16),
-              _buildMenuButton(
-                context,
-                title: 'Multiplayer',
-                subtitle: 'Play with your friends locally',
-                icon: Icons.people,
-                color: const Color(0xFF8B5CF6),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MultiplayerSetupScreen()),
-                  );
-                },
-              ),
-    
-             
-              const SizedBox(height: 32),
-            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildMenuButton(
+  Widget _buildWarmMenuButton(
     BuildContext context, {
     required String title,
     required String subtitle,
     required IconData icon,
     required Color color,
+    required Color lightColor,
     required VoidCallback onTap,
   }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withOpacity(0.2), width: 1.5),
-          boxShadow: [
-            BoxShadow(
-              color: color.withOpacity(0.08),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.12),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(24),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withOpacity(0.08),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: color, size: 26),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF1E293B),
-                    ),
+            child: Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: lightColor,
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey.shade500,
-                    ),
+                  child: Icon(
+                    icon,
+                    color: color,
+                    size: 28,
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF5C4033),
+                          letterSpacing: -0.3,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFF9B7B62),
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(right: 16),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: lightColor,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Icon(
+                    Icons.arrow_forward_rounded,
+                    color: color,
+                    size: 20,
+                  ),
+                ),
+              ],
             ),
-            Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 24),
-          ],
+          ),
         ),
       ),
     );
