@@ -136,8 +136,8 @@ class ClassicModeView extends StatelessWidget {
         GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 1.2, crossAxisSpacing: 12, mainAxisSpacing: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 0.95, crossAxisSpacing: 8, mainAxisSpacing: 8),
           itemCount: subjects.length,
           itemBuilder: (context, index) {
             final subject = subjects[index];
@@ -149,27 +149,27 @@ class ClassicModeView extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 20),
       ],
     );
   }
 
   Widget _buildDifficultyHeader(String title, String subtitle, IconData icon, Color color) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
-            child: Icon(icon, color: color, size: 20),
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+            child: Icon(icon, color: color, size: 18),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
-              Text(subtitle, style: TextStyle(fontSize: 13, color: Colors.grey[600])),
+              Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1E293B))),
+              Text(subtitle, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
             ],
           ),
         ],
@@ -212,28 +212,34 @@ class SubjectCard extends StatelessWidget {
                 ? [Colors.grey.shade400, Colors.grey.shade600]
                 : [subject.color.withOpacity(0.8), subject.color],
           ),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [BoxShadow(color: (isCompleted ? Colors.grey : difficultyColor).withOpacity(0.2), blurRadius: 8, offset: const Offset(0, 4))],
         ),
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 60, height: 60,
-                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(20)),
-                    child: Center(child: Text(subject.icon, style: const TextStyle(fontSize: 30))),
+                    width: 45, height: 45,
+                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
+                    child: Center(child: Text(subject.icon, style: const TextStyle(fontSize: 24))),
                   ),
-                  const SizedBox(height: 12),
-                  Text(subject.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white), textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: 6),
+                  Text(
+                    subject.name, 
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white), 
+                    textAlign: TextAlign.center, 
+                    maxLines: 2, 
+                    overflow: TextOverflow.ellipsis
+                  ),
                 ],
               ),
             ),
             if (isCompleted)
-              const Positioned(top: 12, right: 12, child: Icon(Icons.check_circle, color: Colors.white, size: 20)),
+              const Positioned(top: 8, right: 8, child: Icon(Icons.check_circle, color: Colors.white, size: 16)),
           ],
         ),
       ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/subject.dart';
 
 class SubjectsData {
-  // Easy Mode Subjects - Simple, common words (4 subjects)
+  // Easy Mode Subjects - Simple, common words (6 subjects - added 2 new)
   static List<Subject> easySubjects = [
     Subject(
       id: 'animals',
@@ -11,12 +11,14 @@ class SubjectsData {
       words: [
         'CAT', 'DOG', 'FISH', 'BIRD', 'FROG', 'DUCK', 'BEAR', 'LION',
         'TIGER', 'ZEBRA', 'CAMEL', 'GOAT', 'SHEEP', 'HORSE', 'MOUSE', 'RABBIT',
-        'SNAKE', 'SHARK', 'WHALE', 'CHICK', 'PANDA', 'KOALA', 'OTTER', 'WOLF'
+        'SNAKE', 'SHARK', 'WHALE', 'CHICK', 'PANDA', 'KOALA', 'OTTER', 'WOLF',
+        'PENGUIN', 'ELEPHANT', 'GIRAFFE', 'BUTTERFLY', 'ANT', 'BEE'
       ],
       wordHints: {
         'CAT': 'Meow', 'DOG': 'Bark', 'FISH': 'Swims', 'BIRD': 'Flies in sky', 'FROG': 'Jumping amphibian', 'DUCK': 'Quack', 'BEAR': 'Big furry animal', 'LION': 'King of the jungle',
         'TIGER': 'Striped big cat', 'ZEBRA': 'Striped horse', 'CAMEL': 'Desert animal with humps', 'GOAT': 'Horns and beard', 'SHEEP': 'Wooly animal', 'HORSE': 'Riding animal / Neigh', 'MOUSE': 'Squeaky rodent', 'RABBIT': 'Hops / Eats carrots',
-        'SNAKE': 'Slithering reptile', 'SHARK': 'Toothy sea predator', 'WHALE': 'Huge ocean mammal', 'CHICK': 'Baby chicken', 'PANDA': 'Black and white bear', 'KOALA': 'Eucalyptus eater', 'OTTER': 'Playful river mammal', 'WOLF': 'Howls at moon'
+        'SNAKE': 'Slithering reptile', 'SHARK': 'Toothy sea predator', 'WHALE': 'Huge ocean mammal', 'CHICK': 'Baby chicken', 'PANDA': 'Black and white bear', 'KOALA': 'Eucalyptus eater', 'OTTER': 'Playful river mammal', 'WOLF': 'Howls at moon',
+        'PENGUIN': 'Black and white flightless bird', 'ELEPHANT': 'Largest land animal', 'GIRAFFE': 'Tallest animal with long neck', 'BUTTERFLY': 'Colorful winged insect', 'ANT': 'Tiny social insect', 'BEE': 'Makes honey'
       },
       color: Colors.green,
     ),
@@ -27,12 +29,14 @@ class SubjectsData {
       words: [
         'APPLE', 'BANANA', 'PIZZA', 'BURGER', 'PASTA', 'SUSHI', 'SALAD', 'STEAK',
         'SOUP', 'BREAD', 'TACO', 'CURRY', 'RICE', 'CAKE', 'PIE', 'JELLY',
-        'HONEY', 'SYRUP', 'MEAT', 'FISH', 'EGG', 'MILK', 'TEA', 'COFFEE'
+        'HONEY', 'SYRUP', 'MEAT', 'FISH', 'EGG', 'MILK', 'TEA', 'COFFEE',
+        'CHEESE', 'BUTTER', 'YOGURT', 'JUICE', 'CHOCOLATE', 'DONUT'
       ],
       wordHints: {
         'APPLE': 'Red or green fruit', 'BANANA': 'Yellow fruit, monkeys love it', 'PIZZA': 'Round dough with cheese & toppings', 'BURGER': 'Ground meat patty in a bun', 'PASTA': 'Italian noodles', 'SUSHI': 'Japanese rice and raw fish', 'SALAD': 'Mixed vegetables', 'STEAK': 'Thick slice of beef',
         'SOUP': 'Liquid food dish', 'BREAD': 'Baked dough staple', 'TACO': 'Mexican folded tortilla', 'CURRY': 'Spicy Indian/Asian dish', 'RICE': 'Staple grain of Asia', 'CAKE': 'Sweet baked dessert', 'PIE': 'Baked pastry with filling', 'JELLY': 'Wobbly fruit dessert',
-        'HONEY': 'Sweet liquid made by bees', 'SYRUP': 'Sweet sticky liquid', 'MEAT': 'Animal flesh as food', 'FISH': 'Aquatic animal eaten as food', 'EGG': 'Laid by chickens', 'MILK': 'White dairy liquid', 'TEA': 'Hot infused beverage', 'COFFEE': 'Caffeinated morning drink'
+        'HONEY': 'Sweet liquid made by bees', 'SYRUP': 'Sweet sticky liquid', 'MEAT': 'Animal flesh as food', 'FISH': 'Aquatic animal eaten as food', 'EGG': 'Laid by chickens', 'MILK': 'White dairy liquid', 'TEA': 'Hot infused beverage', 'COFFEE': 'Caffeinated morning drink',
+        'CHEESE': 'Dairy product from milk', 'BUTTER': 'Churned dairy spread', 'YOGURT': 'Fermented milk product', 'JUICE': 'Liquid from fruits', 'CHOCOLATE': 'Sweet brown treat', 'DONUT': 'Fried dough pastry'
       },
       color: Colors.redAccent,
     ),
@@ -43,12 +47,14 @@ class SubjectsData {
       words: [
         'HEAD', 'HAIR', 'EYE', 'EAR', 'NOSE', 'MOUTH', 'TEETH', 'TONGUE',
         'NECK', 'SHOULDER', 'ARM', 'HAND', 'FINGER', 'CHEST', 'BACK', 'STOMACH',
-        'LEG', 'KNEE', 'FOOT', 'TOE', 'SKIN', 'BONE', 'HEART', 'BRAIN'
+        'LEG', 'KNEE', 'FOOT', 'TOE', 'SKIN', 'BONE', 'HEART', 'BRAIN',
+        'LUNG', 'LIVER', 'ELBOW', 'WRIST'
       ],
       wordHints: {
         'HEAD': 'Top part of body', 'HAIR': 'Grows on scalp', 'EYE': 'Organ for seeing', 'EAR': 'Organ for hearing', 'NOSE': 'Organ for smelling', 'MOUTH': 'Opening for eating and speaking', 'TEETH': 'White structures for chewing', 'TONGUE': 'Muscle for tasting',
         'NECK': 'Connects head to body', 'SHOULDER': 'Joint connecting arm to body', 'ARM': 'Upper limb', 'HAND': 'End of arm with fingers', 'FINGER': 'Digits on hand', 'CHEST': 'Front part of torso', 'BACK': 'Rear part of torso', 'STOMACH': 'Organ for digesting food',
-        'LEG': 'Lower limb', 'KNEE': 'Joint in middle of leg', 'FOOT': 'End of leg', 'TOE': 'Digits on foot', 'SKIN': 'Outer covering of body', 'BONE': 'Hard structural part of skeleton', 'HEART': 'Organ that pumps blood', 'BRAIN': 'Organ that controls thinking'
+        'LEG': 'Lower limb', 'KNEE': 'Joint in middle of leg', 'FOOT': 'End of leg', 'TOE': 'Digits on foot', 'SKIN': 'Outer covering of body', 'BONE': 'Hard structural part of skeleton', 'HEART': 'Organ that pumps blood', 'BRAIN': 'Organ that controls thinking',
+        'LUNG': 'Organ for breathing', 'LIVER': 'Organ that filters blood', 'ELBOW': 'Joint between arm and forearm', 'WRIST': 'Joint between hand and forearm'
       },
       color: Colors.pink,
     ),
@@ -59,15 +65,55 @@ class SubjectsData {
       words: [
         'BOOK', 'PEN', 'PENCIL', 'ERASER', 'RULER', 'NOTEBOOK', 'BACKPACK', 'LUNCHBOX',
         'DESK', 'CHAIR', 'BOARD', 'CHALK', 'MARKER', 'SCISSORS', 'GLUE', 'PAPER',
-        'CRAYON', 'PAINT', 'BRUSH', 'CALCULATOR', 'DICTIONARY', 'ATLAS', 'GLOBE', 'LOCKER'
+        'CRAYON', 'PAINT', 'BRUSH', 'CALCULATOR', 'DICTIONARY', 'ATLAS', 'GLOBE', 'LOCKER',
+        'PENCILCASE', 'BINDER', 'STAPLER', 'TAPE', 'COMPASS', 'PROTRACTOR'
       ],
       wordHints: {
         'BOOK': 'Pages with writing', 'PEN': 'Writes with ink', 'PENCIL': 'Writes with graphite', 'ERASER': 'Removes pencil marks', 'RULER': 'Measures length', 'NOTEBOOK': 'Paper for writing notes', 'BACKPACK': 'Bag carried on back', 'LUNCHBOX': 'Container for food',
         'DESK': 'Table for studying', 'CHAIR': 'Seat for sitting', 'BOARD': 'Surface for writing', 'CHALK': 'Writes on blackboard', 'MARKER': 'Colorful writing tool', 'SCISSORS': 'Cuts paper', 'GLUE': 'Sticks things together', 'PAPER': 'Material for writing/drawing',
-        'CRAYON': 'Wax coloring tool', 'PAINT': 'Colored liquid for art', 'BRUSH': 'Tool for applying paint', 'CALCULATOR': 'Does math calculations', 'DICTIONARY': 'Book of word meanings', 'ATLAS': 'Book of maps', 'GLOBE': 'Spherical model of Earth', 'LOCKER': 'Storage compartment'
+        'CRAYON': 'Wax coloring tool', 'PAINT': 'Colored liquid for art', 'BRUSH': 'Tool for applying paint', 'CALCULATOR': 'Does math calculations', 'DICTIONARY': 'Book of word meanings', 'ATLAS': 'Book of maps', 'GLOBE': 'Spherical model of Earth', 'LOCKER': 'Storage compartment',
+        'PENCILCASE': 'Container for pencils', 'BINDER': 'Holds papers together', 'STAPLER': 'Fastens papers', 'TAPE': 'Stick for fastening', 'COMPASS': 'Draws circles', 'PROTRACTOR': 'Measures angles'
       },
       color: Colors.blue,
     ),
+    // NEW EASY SUBJECT 1: Colors
+    Subject(
+      id: 'colors',
+      name: 'Colors',
+      icon: '🌈',
+      words: [
+        'RED', 'BLUE', 'GREEN', 'YELLOW', 'ORANGE', 'PURPLE', 'PINK', 'BROWN',
+        'BLACK', 'WHITE', 'GRAY', 'CYAN', 'MAGENTA', 'INDIGO', 'VIOLET', 'GOLD',
+        'SILVER', 'BRONZE', 'LIME', 'NAVY', 'TURQUOISE', 'CORAL', 'SCARLET', 'BEIGE',
+        'MAROON', 'OLIVE', 'KHAKI', 'CREAM', 'LAVENDER', 'MINT'
+      ],
+      wordHints: {
+        'RED': 'Fire and blood', 'BLUE': 'Sky and ocean', 'GREEN': 'Grass and plants', 'YELLOW': 'Sun and banana', 'ORANGE': 'Fruit color', 'PURPLE': 'Royalty', 'PINK': 'Rose color', 'BROWN': 'Chocolate and earth',
+        'BLACK': 'Darkest color', 'WHITE': 'Lightest color', 'GRAY': 'Between black and white', 'CYAN': 'Light blue', 'MAGENTA': 'Pink-purple', 'INDIGO': 'Deep blue-purple', 'VIOLET': 'Purple hue', 'GOLD': 'Precious metal shine',
+        'SILVER': 'Shiny metallic', 'BRONZE': 'Copper brown', 'LIME': 'Bright green', 'NAVY': 'Dark blue', 'TURQUOISE': 'Blue-green', 'CORAL': 'Orange-pink', 'SCARLET': 'Bright red', 'BEIGE': 'Pale brown',
+        'MAROON': 'Dark red', 'OLIVE': 'Green-brown', 'KHAKI': 'Light brown', 'CREAM': 'Off-white', 'LAVENDER': 'Light purple', 'MINT': 'Light green'
+      },
+      color: Colors.teal,
+    ),
+    // NEW EASY SUBJECT 2: Weather
+    // Subject(
+    //   id: 'weather_easy',
+    //   name: 'Weather',
+    //   icon: '☀️',
+    //   words: [
+    //     'SUNNY', 'RAINY', 'CLOUDY', 'WINDY', 'SNOWY', 'FOGGY', 'STORMY', 'HOT',
+    //     'COLD', 'WARM', 'COOL', 'THUNDER', 'LIGHTNING', 'RAINBOW', 'SNOW', 'RAIN',
+    //     'WIND', 'HAIL', 'FREEZE', 'THAW', 'CLIMATE', 'SEASON', 'SPRING', 'SUMMER',
+    //     'AUTUMN', 'WINTER', 'HUMIDITY', 'PRESSURE', 'TEMPERATURE', 'FORECAST'
+    //   ],
+    //   wordHints: {
+    //     'SUNNY': 'No clouds, bright', 'RAINY': 'Water falling', 'CLOUDY': 'Covered by clouds', 'WINDY': 'Strong air movement', 'SNOWY': 'Covered with snow', 'FOGGY': 'Thick mist', 'STORMY': 'Dangerous weather', 'HOT': 'High temperature',
+    //     'COLD': 'Low temperature', 'WARM': 'Pleasantly hot', 'COOL': 'Pleasantly cold', 'THUNDER': 'Loud storm sound', 'LIGHTNING': 'Electric flash', 'RAINBOW': 'After rain arc', 'SNOW': 'Frozen water', 'RAIN': 'Water from sky',
+    //     'WIND': 'Moving air', 'HAIL': 'Frozen pellets', 'FREEZE': 'Turn to ice', 'THAW': 'Melt from ice', 'CLIMATE': 'Long-term weather', 'SEASON': 'Time of year', 'SPRING': 'Flowers bloom', 'SUMMER': 'Hottest season',
+    //     'AUTUMN': 'Leaves fall', 'WINTER': 'Coldest season', 'HUMIDITY': 'Moisture in air', 'PRESSURE': 'Atmospheric force', 'TEMPERATURE': 'How hot or cold', 'FORECAST': 'Weather prediction'
+    //   },
+    //   color: Colors.lightBlue,
+    // ),
   ];
 
   // Medium Mode Subjects - More complex words (6 subjects - added 2 new)

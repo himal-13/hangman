@@ -140,7 +140,7 @@ class MainMenuScreen extends StatelessWidget {
                           ),
                           _buildWarmMenuButton(
                             context,
-                            title: 'Word Guess',
+                            title: 'Wordoku',
                             subtitle: '',
                             icon: Icons.spellcheck,
                             color: const Color(0xFFD4A373),

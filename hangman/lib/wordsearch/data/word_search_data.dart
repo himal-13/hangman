@@ -204,6 +204,11 @@ class WordSearchData {
         WordSearchLevel(id: 3, name: 'Level 3', description: 'Find the Antonym', gridSize: 9, wordCount: 4, words: ['NIGHT', 'EMPTY', 'SOFT', 'WEAK'], clues: {'DAY': 'NIGHT', 'FULL': 'EMPTY', 'HARD': 'SOFT', 'STRONG': 'WEAK'}),
         WordSearchLevel(id: 4, name: 'Level 4', description: 'Find the Antonym', gridSize: 9, wordCount: 4, words: ['OUT', 'DARK', 'WRONG', 'LOW'], clues: {'IN': 'OUT', 'LIGHT': 'DARK', 'RIGHT': 'WRONG', 'HIGH': 'LOW'}),
         WordSearchLevel(id: 5, name: 'Level 5', description: 'Find the Antonym', gridSize: 10, wordCount: 4, words: ['CRUEL', 'FEW', 'AWAKE', 'TIGHT'], clues: {'KIND': 'CRUEL', 'MANY': 'FEW', 'ASLEEP': 'AWAKE', 'LOOSE': 'TIGHT'}),
+        WordSearchLevel(id: 6, name: 'Level 6', description: 'Find the Antonym', gridSize: 10, wordCount: 4, words: ['START', 'PUSH', 'CLEAN', 'EXPAND'], clues: {'END': 'START', 'PULL': 'PUSH', 'DIRTY': 'CLEAN', 'SHRINK': 'EXPAND'}),
+        WordSearchLevel(id: 7, name: 'Level 7', description: 'Find the Antonym', gridSize: 10, wordCount: 4, words: ['FORWARD', 'DECREASE', 'FAILURE', 'LIQUID'], clues: {'BACKWARD': 'FORWARD', 'INCREASE': 'DECREASE', 'SUCCESS': 'FAILURE', 'SOLID': 'LIQUID'}),
+        WordSearchLevel(id: 8, name: 'Level 8', description: 'Find the Antonym', gridSize: 11, wordCount: 4, words: ['HORIZONTAL', 'EXTERIOR', 'ABSTRACT', 'PRIVATE'], clues: {'VERTICAL': 'HORIZONTAL', 'INTERIOR': 'EXTERIOR', 'CONCRETE': 'ABSTRACT', 'PUBLIC': 'PRIVATE'}),
+        WordSearchLevel(id: 9, name: 'Level 9', description: 'Find the Antonym', gridSize: 11, wordCount: 4, words: ['TEMPORARY', 'SPECIFIC', 'VOLUNTARY', 'ARTIFICIAL'], clues: {'PERMANENT': 'TEMPORARY', 'GENERAL': 'SPECIFIC', 'MANDATORY': 'VOLUNTARY', 'NATURAL': 'ARTIFICIAL'}),
+        WordSearchLevel(id: 10, name: 'Level 10', description: 'Find the Antonym', gridSize: 11, wordCount: 4, words: ['ABUNDANCE', 'PESSIMIST', 'CHAOS', 'CREATION'], clues: {'SCARCITY': 'ABUNDANCE', 'OPTIMIST': 'PESSIMIST', 'ORDER': 'CHAOS', 'DESTRUCTION': 'CREATION'}),
       ],
     ),
     const WordSearchSubject(
@@ -217,8 +222,31 @@ class WordSearchData {
         WordSearchLevel(id: 3, name: 'Level 3', description: 'Find the Synonym', gridSize: 9, wordCount: 4, words: ['PRETTY', 'HARD', 'SMART', 'GIFT'], clues: {'LOVELY': 'PRETTY', 'TOUGH': 'HARD', 'CLEVER': 'SMART', 'PRESENT': 'GIFT'}),
         WordSearchLevel(id: 4, name: 'Level 4', description: 'Find the Synonym', gridSize: 9, wordCount: 4, words: ['QUIET', 'SIMPLE', 'RICH', 'COLD'], clues: {'SILENT': 'QUIET', 'EASY': 'SIMPLE', 'WEALTHY': 'RICH', 'CHILLY': 'COLD'}),
         WordSearchLevel(id: 5, name: 'Level 5', description: 'Find the Synonym', gridSize: 10, wordCount: 4, words: ['BRAVE', 'FAMOUS', 'FRAGILE', 'HONEST'], clues: {'COURAGEOUS': 'BRAVE', 'WELLKNOWN': 'FAMOUS', 'DELICATE': 'FRAGILE', 'SINCERE': 'HONEST'}),
+        WordSearchLevel(id: 6, name: 'Level 6', description: 'Find the Synonym', gridSize: 10, wordCount: 4, words: ['ANCIENT', 'BRIGHT', 'OBTAIN', 'PEACEFUL'], clues: {'OLD': 'ANCIENT', 'SHINY': 'BRIGHT', 'GET': 'OBTAIN', 'CALM': 'PEACEFUL'}),
+        WordSearchLevel(id: 7, name: 'Level 7', description: 'Find the Synonym', gridSize: 10, wordCount: 4, words: ['BRILLIANT', 'ABUNDANT', 'CAUTIOUS', 'SLENDER'], clues: {'SMART': 'BRILLIANT', 'PLENTIFUL': 'ABUNDANT', 'CAREFUL': 'CAUTIOUS', 'THIN': 'SLENDER'}),
+        WordSearchLevel(id: 8, name: 'Level 8', description: 'Find the Synonym', gridSize: 11, wordCount: 4, words: ['FORTUNATE', 'GENUINE', 'RELUCTANT', 'ZEALOUS'], clues: {'LUCKY': 'FORTUNATE', 'REAL': 'GENUINE', 'UNWILLING': 'RELUCTANT', 'ENTHUSIASTIC': 'ZEALOUS'}),
+        WordSearchLevel(id: 9, name: 'Level 9', description: 'Find the Synonym', gridSize: 11, wordCount: 4, words: ['DECEPTIVE', 'MAGNIFICENT', 'MEAGER', 'VIVACIOUS'], clues: {'DISHONEST': 'DECEPTIVE', 'SPLENDID': 'MAGNIFICENT', 'SCANTY': 'MEAGER', 'LIVELY': 'VIVACIOUS'}),
+        WordSearchLevel(id: 10, name: 'Level 10', description: 'Find the Synonym', gridSize: 11, wordCount: 4, words: ['ASSIDUOUS', 'CACOPHONY', 'EPHEMERAL', 'FORMIDABLE'], clues: {'DILIGENT': 'ASSIDUOUS', 'NOISE': 'CACOPHONY', 'TEMPORARY': 'EPHEMERAL', 'DAUNTING': 'FORMIDABLE'}),
       ],
     ),
+    // const WordSearchSubject(
+    //   id: 'ws_scientific_names',
+    //   name: 'Scientific Names',
+    //   icon: '🔬',
+    //   color: Colors.green,
+    //   levels: [
+    //     WordSearchLevel(id: 1, name: 'Level 1', description: 'Find the animal from scientific name', gridSize: 8, wordCount: 4, words: ['CANIS', 'FELIS', 'EQUUS', 'BOS'], clues: {'DOG': 'CANIS', 'CAT': 'FELIS', 'HORSE': 'EQUUS', 'COW': 'BOS'}),
+    //     WordSearchLevel(id: 2, name: 'Level 2', description: 'Find the animal from scientific name', gridSize: 9, wordCount: 4, words: ['URSUS', 'PANTHERA', 'OVIS', 'GALLUS'], clues: {'BEAR': 'URSUS', 'LION': 'PANTHERA', 'SHEEP': 'OVIS', 'CHICKEN': 'GALLUS'}),
+    //     WordSearchLevel(id: 3, name: 'Level 3', description: 'Find the animal from scientific name', gridSize: 10, wordCount: 4, words: ['ELEPHANT', 'GIRAFFA', 'ZEBRA', 'RHINOCEROS'], clues: {'ELEPHANT': 'ELEPHANT', 'GIRAFFE': 'GIRAFFA', 'ZEBRA': 'ZEBRA', 'RHINO': 'RHINOCEROS'}),
+    //     WordSearchLevel(id: 4, name: 'Level 4', description: 'Find the animal from scientific name', gridSize: 10, wordCount: 4, words: ['PONGO', 'GORILLA', 'MANDRILLUS', 'CERCOPITHECUS'], clues: {'ORANGUTAN': 'PONGO', 'GORILLA': 'GORILLA', 'MANDRILL': 'MANDRILLUS', 'MONKEY': 'CERCOPITHECUS'}),
+    //     WordSearchLevel(id: 5, name: 'Level 5', description: 'Find the animal from scientific name', gridSize: 10, wordCount: 4, words: ['TURTUR', 'PSITTACUS', 'STRIX', 'AQUILA'], clues: {'DOVE': 'TURTUR', 'PARROT': 'PSITTACUS', 'OWL': 'STRIX', 'EAGLE': 'AQUILA'}),
+    //     WordSearchLevel(id: 6, name: 'Level 6', description: 'Find the plant from scientific name', gridSize: 11, wordCount: 4, words: ['SOLANUM', 'CAPSICUM', 'TRITICUM', 'ORYZA'], clues: {'POTATO': 'SOLANUM', 'PEPPER': 'CAPSICUM', 'WHEAT': 'TRITICUM', 'RICE': 'ORYZA'}),
+    //     WordSearchLevel(id: 7, name: 'Level 7', description: 'Find the plant from scientific name', gridSize: 11, wordCount: 4, words: ['MALUS', 'PERSICA', 'CITRUS', 'FRAGARIA'], clues: {'APPLE': 'MALUS', 'PEACH': 'PERSICA', 'LEMON': 'CITRUS', 'STRAWBERRY': 'FRAGARIA'}),
+    //     WordSearchLevel(id: 8, name: 'Level 8', description: 'Find the animal from scientific name', gridSize: 12, wordCount: 4, words: ['PANTHERA', 'CROCUTA', 'LYCAON', 'FELISMELO'], clues: {'TIGER': 'PANTHERA', 'HYENA': 'CROCUTA', 'WILDDOGS': 'LYCAON', 'CHEETAH': 'FELISMELO'}),
+    //     WordSearchLevel(id: 9, name: 'Level 9', description: 'Find the plant from scientific name', gridSize: 12, wordCount: 4, words: ['HELIANTHUS', 'DAHLIA', 'HIBISCUS', 'ROSA'], clues: {'SUNFLOWER': 'HELIANTHUS', 'DAHLIA': 'DAHLIA', 'HIBISCUS': 'HIBISCUS', 'ROSE': 'ROSA'}),
+    //     WordSearchLevel(id: 10, name: 'Level 10', description: 'Find the organism from scientific name', gridSize: 12, wordCount: 4, words: ['PICEA', 'PINUS', 'QUERCUS', 'BETULA'], clues: {'SPRUCE': 'PICEA', 'PINE': 'PINUS', 'OAK': 'QUERCUS', 'BIRCH': 'BETULA'}),
+    //   ],
+    // ),
   ];
 
 }

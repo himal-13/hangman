@@ -28,12 +28,10 @@ class _GameScreenState extends State<GameScreen> {
   final int _maxAttempts = 6;
   bool _isLoading = true;
 
-  late DateTime _sessionStartTime;
 
   @override
   void initState() {
     super.initState();
-    _sessionStartTime = DateTime.now();
     _loadGame();
   }
 
