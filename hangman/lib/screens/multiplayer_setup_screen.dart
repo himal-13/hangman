@@ -473,22 +473,6 @@ class _MultiplayerSetupScreenState extends State<MultiplayerSetupScreen> {
           ),
         ),
         const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: isAlt ? Colors.orange.shade50 : Colors.green.shade50,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: isAlt ? Colors.orange.shade200 : Colors.green.shade200),
-          ),
-          child: Text(
-            'Each round contains:\n• 1 × 2-letter word\n• 1 × 3-letter word\n• 1 × 4-letter word\n• 2 × Hard words (5-7 letters)',
-            style: TextStyle(
-              fontSize: 12,
-              color: isAlt ? const Color(0xFF7C2D12) : const Color(0xFF166534),
-              height: 1.4,
-            ),
-          ),
-        ),
       ],
     );
   }

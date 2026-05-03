@@ -16,7 +16,7 @@ class WordSearchData {
         WordSearchLevel(id: 3, name: 'Level 3', description: 'Family members', gridSize: 7, wordCount: 4, words: ['MOTHER', 'FATHER', 'SISTER', 'BROTHER']),
         WordSearchLevel(id: 4, name: 'Level 4', description: 'Home appliances', gridSize: 7, wordCount: 4, words: ['TV', 'FRIDGE', 'FAN', 'LAMP']),
         WordSearchLevel(id: 5, name: 'Level 5', description: 'Clothing', gridSize: 7, wordCount: 4, words: ['SHIRT', 'PANTS', 'SOCKS', 'HAT']),
-        WordSearchLevel(id: 6, name: 'Level 6', description: 'School items', gridSize: 7, wordCount: 4, words: ['NOTEBOOK', 'RULER', 'ERASER', 'BAG']),
+        WordSearchLevel(id: 6, name: 'Level 6', description: 'School items', gridSize: 8, wordCount: 4, words: ['NOTEBOOK', 'RULER', 'ERASER', 'BAG']), // Fixed: 7 -> 8
         WordSearchLevel(id: 7, name: 'Level 7', description: 'Body parts', gridSize: 7, wordCount: 4, words: ['HAND', 'FOOT', 'EYE', 'NOSE']),
         WordSearchLevel(id: 8, name: 'Level 8', description: 'Daily actions', gridSize: 7, wordCount: 4, words: ['EAT', 'SLEEP', 'WALK', 'READ']),
         WordSearchLevel(id: 9, name: 'Level 9', description: 'Places', gridSize: 8, wordCount: 4, words: ['SCHOOL', 'HOSPITAL', 'PARK', 'BANK']),
@@ -26,6 +26,24 @@ class WordSearchData {
         WordSearchLevel(id: 13, name: 'Level 13', description: 'Kitchen items', gridSize: 8, wordCount: 4, words: ['CUP', 'PLATE', 'FORK', 'KNIFE']),
         WordSearchLevel(id: 14, name: 'Level 14', description: 'Workplace', gridSize: 8, wordCount: 4, words: ['OFFICE', 'COMPUTER', 'DESK', 'PHONE']),
         WordSearchLevel(id: 15, name: 'Level 15', description: 'Transport', gridSize: 9, wordCount: 4, words: ['CAR', 'BUS', 'BIKE', 'TRAIN']),
+      ],
+    ),
+    const WordSearchSubject(
+      id: 'ws_advanced_easy',
+      name: 'Advanced Mode',
+      icon: '🧠',
+      color: Colors.blue,
+      levels: [
+        WordSearchLevel(id: 1, name: 'Level 1', description: 'Complex objects', gridSize: 8, wordCount: 4, words: ['UMBRELLA', 'BACKPACK', 'MIRROR', 'CALENDAR']), // Fixed: 7 -> 8
+        WordSearchLevel(id: 2, name: 'Level 2', description: 'Specific foods', gridSize: 9, wordCount: 4, words: ['SPAGHETTI', 'BROCCOLI', 'PANCAKE', 'SANDWICH']), // Fixed: 7 -> 9
+        WordSearchLevel(id: 3, name: 'Level 3', description: 'Nature details', gridSize: 9, wordCount: 4, words: ['MOUNTAIN', 'WATERFALL', 'VOLCANO', 'FOREST']), // Fixed: 8 -> 9
+        WordSearchLevel(id: 4, name: 'Level 4', description: 'Abstract nouns', gridSize: 8, wordCount: 4, words: ['FREEDOM', 'JUSTICE', 'SILENCE', 'WISDOM']),
+        WordSearchLevel(id: 5, name: 'Level 5', description: 'Science basics', gridSize: 8, wordCount: 4, words: ['GRAVITY', 'ENERGY', 'PLANT', 'ANIMAL']),
+        WordSearchLevel(id: 6, name: 'Level 6', description: 'Instruments', gridSize: 9, wordCount: 4, words: ['TRUMPET', 'VIOLIN', 'GUITAR', 'PIANO']),
+        WordSearchLevel(id: 7, name: 'Level 7', description: 'Space', gridSize: 9, wordCount: 4, words: ['GALAXY', 'PLANET', 'COMET', 'NEBULA']),
+        WordSearchLevel(id: 8, name: 'Level 8', description: 'Architecture', gridSize: 9, wordCount: 4, words: ['COLUMN', 'BRIDGE', 'TOWER', 'PALACE']),
+        WordSearchLevel(id: 9, name: 'Level 9', description: 'Technology', gridSize: 10, wordCount: 4, words: ['SOFTWARE', 'HARDWARE', 'NETWORK', 'INTERNET']),
+        WordSearchLevel(id: 10, name: 'Level 10', description: 'Environment', gridSize: 10, wordCount: 4, words: ['CLIMATE', 'ECOLOGY', 'RECYCLE', 'POLLUTE']),
       ],
     ),
   ];
@@ -78,7 +96,7 @@ class WordSearchData {
           id: 5, 
           name: 'Level 5', 
           description: ' American cities', 
-          gridSize: 9, 
+          gridSize: 10, // Fixed: 9 -> 10 (MEXICOCITY has 10 letters)
           wordCount: 4, 
           words: ['TORONTO', 'MEXICOCITY', 'CHICAGO', 'SAOPAULO'],
           clues: {'CANADA': 'TORONTO', 'MEXICO': 'MEXICOCITY', 'USA': 'CHICAGO', 'BRAZIL': 'SAOPAULO'},
@@ -87,7 +105,7 @@ class WordSearchData {
           id: 6, 
           name: 'Level 6', 
           description: 'South American cities', 
-          gridSize: 10, 
+          gridSize: 11, // Fixed: 10 -> 11 (BUENOSAIRES has 11 letters)
           wordCount: 4, 
           words: ['SAOPAULO', 'BUENOSAIRES', 'LIMA', 'BOGOTA'],
           clues: {'BRAZIL': 'SAOPAULO', 'ARGENTINA': 'BUENOSAIRES', 'PERU': 'LIMA', 'COLOMBIA': 'BOGOTA'},
@@ -96,7 +114,7 @@ class WordSearchData {
           id: 7, 
           name: 'Level 7', 
           description: 'African cities', 
-          gridSize: 10, 
+          gridSize: 12, // Fixed: 10 -> 12 (JOHANNESBURG has 12 letters)
           wordCount: 4, 
           words: ['CAIRO', 'JOHANNESBURG', 'NAIROBI', 'LAGOS'],
           clues: {'EGYPT': 'CAIRO', 'SOUTHAFRICA': 'JOHANNESBURG', 'KENYA': 'NAIROBI', 'NIGERIA': 'LAGOS'},
@@ -123,10 +141,10 @@ class WordSearchData {
           id: 10, 
           name: 'Level 10', 
           description: 'Historical cities', 
-          gridSize: 10, 
+          gridSize: 11,
           wordCount: 4, 
-          words: ['JERUSALEM', 'BABYLON', 'MACHUPICCHU', 'POMPEII'],
-          clues: {'ISRAEL': 'JERUSALEM', 'IRAQ': 'BABYLON', 'PERU': 'MACHUPICCHU', 'ITALY': 'POMPEII'},
+          words: ['JERUSALEM', 'BABYLON', 'LIMA', 'POMPEII'],
+          clues: {'ISRAEL': 'JERUSALEM', 'IRAQ': 'BABYLON', 'PERU': 'LIMA', 'ITALY': 'POMPEII'},
         ),
         WordSearchLevel(
           id: 11, 
@@ -175,7 +193,32 @@ class WordSearchData {
         ),
       ],
     ),
+    const WordSearchSubject(
+      id: 'ws_antonyms',
+      name: 'Antonym Mode',
+      icon: '🌓',
+      color: Colors.orange,
+      levels: [
+        WordSearchLevel(id: 1, name: 'Level 1', description: 'Find the Antonym', gridSize: 8, wordCount: 4, words: ['COLD', 'SMALL', 'SLOW', 'DOWN'], clues: {'HOT': 'COLD', 'BIG': 'SMALL', 'FAST': 'SLOW', 'UP': 'DOWN'}),
+        WordSearchLevel(id: 2, name: 'Level 2', description: 'Find the Antonym', gridSize: 8, wordCount: 4, words: ['SAD', 'POOR', 'NEW', 'BAD'], clues: {'HAPPY': 'SAD', 'RICH': 'POOR', 'OLD': 'NEW', 'GOOD': 'BAD'}),
+        WordSearchLevel(id: 3, name: 'Level 3', description: 'Find the Antonym', gridSize: 9, wordCount: 4, words: ['NIGHT', 'EMPTY', 'SOFT', 'WEAK'], clues: {'DAY': 'NIGHT', 'FULL': 'EMPTY', 'HARD': 'SOFT', 'STRONG': 'WEAK'}),
+        WordSearchLevel(id: 4, name: 'Level 4', description: 'Find the Antonym', gridSize: 9, wordCount: 4, words: ['OUT', 'DARK', 'WRONG', 'LOW'], clues: {'IN': 'OUT', 'LIGHT': 'DARK', 'RIGHT': 'WRONG', 'HIGH': 'LOW'}),
+        WordSearchLevel(id: 5, name: 'Level 5', description: 'Find the Antonym', gridSize: 10, wordCount: 4, words: ['CRUEL', 'FEW', 'AWAKE', 'TIGHT'], clues: {'KIND': 'CRUEL', 'MANY': 'FEW', 'ASLEEP': 'AWAKE', 'LOOSE': 'TIGHT'}),
+      ],
+    ),
+    const WordSearchSubject(
+      id: 'ws_synonyms',
+      name: 'Synonym Mode',
+      icon: '🔗',
+      color: Colors.indigo,
+      levels: [
+        WordSearchLevel(id: 1, name: 'Level 1', description: 'Find the Synonym', gridSize: 8, wordCount: 4, words: ['LARGE', 'TINY', 'QUICK', 'GLAD'], clues: {'BIG': 'LARGE', 'SMALL': 'TINY', 'FAST': 'QUICK', 'HAPPY': 'GLAD'}),
+        WordSearchLevel(id: 2, name: 'Level 2', description: 'Find the Synonym', gridSize: 8, wordCount: 4, words: ['UNHAPPY', 'ANGRY', 'START', 'HALT'], clues: {'SAD': 'UNHAPPY', 'MAD': 'ANGRY', 'BEGIN': 'START', 'STOP': 'HALT'}),
+        WordSearchLevel(id: 3, name: 'Level 3', description: 'Find the Synonym', gridSize: 9, wordCount: 4, words: ['PRETTY', 'HARD', 'SMART', 'GIFT'], clues: {'LOVELY': 'PRETTY', 'TOUGH': 'HARD', 'CLEVER': 'SMART', 'PRESENT': 'GIFT'}),
+        WordSearchLevel(id: 4, name: 'Level 4', description: 'Find the Synonym', gridSize: 9, wordCount: 4, words: ['QUIET', 'SIMPLE', 'RICH', 'COLD'], clues: {'SILENT': 'QUIET', 'EASY': 'SIMPLE', 'WEALTHY': 'RICH', 'CHILLY': 'COLD'}),
+        WordSearchLevel(id: 5, name: 'Level 5', description: 'Find the Synonym', gridSize: 10, wordCount: 4, words: ['BRAVE', 'FAMOUS', 'FRAGILE', 'HONEST'], clues: {'COURAGEOUS': 'BRAVE', 'WELLKNOWN': 'FAMOUS', 'DELICATE': 'FRAGILE', 'SINCERE': 'HONEST'}),
+      ],
+    ),
   ];
 
 }
-//

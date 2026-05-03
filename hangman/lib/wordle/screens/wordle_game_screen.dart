@@ -527,17 +527,16 @@ class _GameContentState extends State<_GameContent> {
           const SizedBox(height: 8),
           Consumer<GameSettingsProvider>(
             builder: (context, settings, child) {
-              final hasEnoughCoins = settings.coins >= 5;
               return SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () => _handleHint(context, state),
                   icon: const Icon(Icons.lightbulb_outline, size: 20),
-                  label: Row(
+                  label: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text('HINT'),
-                      const SizedBox(width: 8),
+                      Text('HINT'),
+                      SizedBox(width: 8),
                       Text(
                         '5🪙',
                         style: TextStyle(

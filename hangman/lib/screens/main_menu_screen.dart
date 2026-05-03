@@ -65,6 +65,33 @@ class MainMenuScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                // App Title
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 32),
+                  child: Column(
+                    children: [
+                      Text(
+                        'HANGMAN',
+                        style: TextStyle(
+                          fontSize: 48,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFF5C4033),
+                          letterSpacing: 4,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'WORD ADVENTURE',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF8B6B4D),
+                          letterSpacing: 2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 // Menu Buttons Section - 2 per row
                 Expanded(
                   flex: 3,

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hangman/services/game_progress.dart';
 import 'package:hangman/services/game_setting.dart';
 import 'package:hangman/audio/audio_manager.dart';
-import 'package:hangman/services/rating_service.dart';
 import 'package:provider/provider.dart';
 import 'package:hangman/components/hangman_drawing.dart';
 import 'package:hangman/components/coin_dialogs.dart';
@@ -29,7 +28,7 @@ class _GameScreenState extends State<GameScreen> {
   bool _isLoading = true;
 
   late DateTime _sessionStartTime;
-  
+
   @override
   void initState() {
     super.initState();
@@ -46,17 +45,20 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _initializeGame({bool forceNewWord = false}) {
-    final progressProvider = Provider.of<GameProgressProvider>(context, listen: false);
-    final completedWords = progressProvider.getCompletedWords(widget.subject.id);
-    
+    final progressProvider =
+        Provider.of<GameProgressProvider>(context, listen: false);
+    final completedWords =
+        progressProvider.getCompletedWords(widget.subject.id);
+
     if (forceNewWord || _currentWord == null) {
-      final unsolvedWords = _words.where((w) => !completedWords.contains(w)).toList();
-      
+      final unsolvedWords =
+          _words.where((w) => !completedWords.contains(w)).toList();
+
       if (unsolvedWords.isEmpty) {
         _showGameCompleteDialog();
         return;
       }
-      
+
       final random = Random();
       _currentWord = unsolvedWords[random.nextInt(unsolvedWords.length)];
     }
@@ -83,7 +85,7 @@ class _GameScreenState extends State<GameScreen> {
 
     setState(() {
       _usedLetters.add(letter);
-      
+
       if (_currentWord!.toUpperCase().contains(letter)) {
         _gameState.guessedLetters.add(letter);
         AudioManager.playCorrect();
@@ -104,17 +106,18 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _showHintOptions() {
-  final settingsProvider = Provider.of<GameSettingsProvider>(context, listen: false);
-  
-  // Check if user has at least 10 coins (minimum for any hint)
-  if (settingsProvider.coins < 10) {
-    CoinDialogs.showNotEnoughCoinsDialog(
-      context: context, 
-      settingsProvider: settingsProvider,
-      onAdSuccess: () => _showHintOptions(),
-    );
-    return;
-  }
+    final settingsProvider =
+        Provider.of<GameSettingsProvider>(context, listen: false);
+
+    // Check if user has at least 10 coins (minimum for any hint)
+    if (settingsProvider.coins < 10) {
+      CoinDialogs.showNotEnoughCoinsDialog(
+        context: context,
+        settingsProvider: settingsProvider,
+        onAdSuccess: () => _showHintOptions(),
+      );
+      return;
+    }
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -140,7 +143,9 @@ class _GameScreenState extends State<GameScreen> {
                   leading: const Icon(Icons.abc, color: Colors.blue, size: 30),
                   title: const Text('Reveal a Letter'),
                   subtitle: const Text('Costs 10 coins'),
-                  trailing: const Text('🪙 10', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  trailing: const Text('🪙 10',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   onTap: () {
                     Navigator.pop(context);
                     _buyLetterHint();
@@ -154,17 +159,22 @@ class _GameScreenState extends State<GameScreen> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: ListTile(
-                  leading: const Icon(Icons.lightbulb, color: Colors.amber, size: 30),
+                  leading: const Icon(Icons.lightbulb,
+                      color: Colors.amber, size: 30),
                   title: const Text('Word Hint'),
                   subtitle: const Text('Costs 15 coins'),
-                  trailing: const Text('🪙 15', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  trailing: const Text('🪙 15',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   onTap: () {
                     Navigator.pop(context);
                     _buyWordHint();
                   },
                 ),
               ),
-              const SizedBox(height: 30,)
+              const SizedBox(
+                height: 30,
+              )
             ],
           ),
         );
@@ -173,8 +183,9 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _buyLetterHint() async {
-    final settingsProvider = Provider.of<GameSettingsProvider>(context, listen: false);
-    
+    final settingsProvider =
+        Provider.of<GameSettingsProvider>(context, listen: false);
+
     if (settingsProvider.coins >= 10) {
       // Find unguessed letters
       final wordLetters = _currentWord!.toUpperCase().split('');
@@ -197,18 +208,18 @@ class _GameScreenState extends State<GameScreen> {
       _giveLetterHint(unguessedLetters, settingsProvider);
     } else {
       CoinDialogs.showNotEnoughCoinsDialog(
-        context: context, 
+        context: context,
         settingsProvider: settingsProvider,
         onAdSuccess: () => _showHintOptions(),
       );
     }
   }
 
-  void _giveLetterHint(List<String> unguessedLetters, GameSettingsProvider settingsProvider) {
+  void _giveLetterHint(
+      List<String> unguessedLetters, GameSettingsProvider settingsProvider) {
     // Pick a random unguessed letter
     final hintLetter = unguessedLetters[
-      DateTime.now().millisecondsSinceEpoch % unguessedLetters.length
-    ];
+        DateTime.now().millisecondsSinceEpoch % unguessedLetters.length];
 
     // Automatically guess that letter
     _guessLetter(hintLetter);
@@ -225,18 +236,21 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _buyWordHint() {
-    final settingsProvider = Provider.of<GameSettingsProvider>(context, listen: false);
-    
+    final settingsProvider =
+        Provider.of<GameSettingsProvider>(context, listen: false);
+
     if (settingsProvider.coins >= 15) {
       settingsProvider.spendCoins(15);
-      final hint = widget.subject.wordHints[_currentWord!] ?? 'No hint available for this word.';
-      
+      final hint = widget.subject.wordHints[_currentWord!] ??
+          'No hint available for this word.';
+
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('💡 Word Hint', style: TextStyle(fontWeight: FontWeight.bold)),
+          title: const Text('💡 Word Hint',
+              style: TextStyle(fontWeight: FontWeight.bold)),
           content: Text(
-            hint, 
+            hint,
             style: const TextStyle(fontSize: 18),
             textAlign: TextAlign.center,
           ),
@@ -246,55 +260,49 @@ class _GameScreenState extends State<GameScreen> {
               child: const Text('OK', style: TextStyle(fontSize: 16)),
             ),
           ],
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         ),
       );
     } else {
       CoinDialogs.showNotEnoughCoinsDialog(
-        context: context, 
+        context: context,
         settingsProvider: settingsProvider,
         onAdSuccess: () => _showHintOptions(),
       );
     }
   }
 
-
   Future<void> _handleWordCompletion() async {
-    final progressProvider = Provider.of<GameProgressProvider>(context, listen: false);
-    
+    final progressProvider =
+        Provider.of<GameProgressProvider>(context, listen: false);
+
     // Mark word as completed
-    await progressProvider.markWordAsCompleted(widget.subject.id, _currentWord!);
-    
+    await progressProvider.markWordAsCompleted(
+        widget.subject.id, _currentWord!);
+
     // Play win sound
     AudioManager.playLevelComplete();
-    
+
     // Check if this was the last word in the subject
-    final completedWords = progressProvider.getCompletedWords(widget.subject.id);
+    final completedWords =
+        progressProvider.getCompletedWords(widget.subject.id);
     final isSubjectComplete = completedWords.length >= _words.length;
-    
+
     if (isSubjectComplete) {
       _showGameCompleteDialog();
+      _checkRatingTrigger();
     } else {
       _showWordGuessedDialog();
     }
-    
-    // Check if we should show rating prompt
-    _checkRatingTrigger();
   }
 
-  void _checkRatingTrigger() async {
+  Future<void> _checkRatingTrigger() async {
     final now = DateTime.now();
     final playDuration = now.difference(_sessionStartTime);
-    
-    // Trigger if they've played for at least 1 minute (for testing, usually 3 minutes as planned)
-    // I'll set it to 3 minutes as discussed.
-    if (playDuration.inMinutes >= 3) {
-      if (await RatingService.instance.shouldShowRating()) {
-        if (mounted) {
-          RatingService.instance.showStarRatingDialog(context);
-          await RatingService.instance.markRatingPromptShown();
-        }
-      }
+
+    if (playDuration.inSeconds >= 45) {
+      
     }
   }
 
@@ -356,7 +364,7 @@ class _GameScreenState extends State<GameScreen> {
                     ],
                   ),
                 ),
-                
+
                 // Success message
                 const Text(
                   '🎉 EXCELLENT!',
@@ -374,12 +382,13 @@ class _GameScreenState extends State<GameScreen> {
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 15),
-                
+
                 // Word revealed
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.95),
                     borderRadius: BorderRadius.circular(30),
@@ -402,16 +411,18 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Progress info
                 Consumer<GameProgressProvider>(
                   builder: (context, progress, child) {
-                    final completed = progress.getCompletedWords(widget.subject.id).length;
+                    final completed =
+                        progress.getCompletedWords(widget.subject.id).length;
                     return Container(
                       margin: const EdgeInsets.only(bottom: 15),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(20),
@@ -426,7 +437,7 @@ class _GameScreenState extends State<GameScreen> {
                     );
                   },
                 ),
-                
+
                 // Action buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -444,7 +455,7 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 5),
               ],
             ),
@@ -508,7 +519,6 @@ class _GameScreenState extends State<GameScreen> {
                     ],
                   ),
                 ),
-                
                 const Text(
                   '😢 GAME OVER',
                   style: TextStyle(
@@ -525,9 +535,7 @@ class _GameScreenState extends State<GameScreen> {
                     ],
                   ),
                 ),
-                
                 const SizedBox(height: 15),
-                                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -553,7 +561,6 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                   ],
                 ),
-                
                 const SizedBox(height: 5),
               ],
             ),
@@ -600,15 +607,17 @@ class _GameScreenState extends State<GameScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.star_rounded, size: 40, color: Colors.yellow.shade300),
+                      Icon(Icons.star_rounded,
+                          size: 40, color: Colors.yellow.shade300),
                       const SizedBox(width: 5),
-                      Icon(Icons.emoji_events_rounded, size: 60, color: Colors.yellow.shade600),
+                      Icon(Icons.emoji_events_rounded,
+                          size: 60, color: Colors.yellow.shade600),
                       const SizedBox(width: 5),
-                      Icon(Icons.star_rounded, size: 40, color: Colors.yellow.shade300),
+                      Icon(Icons.star_rounded,
+                          size: 40, color: Colors.yellow.shade300),
                     ],
                   ),
                 ),
-                
                 Text(
                   '🏆 AMAZING!',
                   style: TextStyle(
@@ -625,11 +634,10 @@ class _GameScreenState extends State<GameScreen> {
                     ],
                   ),
                 ),
-                
                 const SizedBox(height: 10),
-                
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                   child: Text(
                     'You completed all words in\n${widget.subject.name}!',
                     textAlign: TextAlign.center,
@@ -640,9 +648,9 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                   ),
                 ),
-                
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   margin: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.2),
@@ -651,7 +659,8 @@ class _GameScreenState extends State<GameScreen> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+                      const Icon(Icons.check_circle_rounded,
+                          color: Colors.white, size: 20),
                       const SizedBox(width: 8),
                       Text(
                         '${_words.length} words mastered',
@@ -664,9 +673,7 @@ class _GameScreenState extends State<GameScreen> {
                     ],
                   ),
                 ),
-                
                 const SizedBox(height: 15),
-                
                 _buildDialogButton(
                   icon: Icons.home_rounded,
                   label: 'BACK TO MENU',
@@ -678,7 +685,6 @@ class _GameScreenState extends State<GameScreen> {
                   },
                   isFullWidth: true,
                 ),
-                
                 const SizedBox(height: 5),
               ],
             ),
@@ -746,8 +752,10 @@ class _GameScreenState extends State<GameScreen> {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: Provider.of<GameProgressProvider>(context)),
-        ChangeNotifierProvider.value(value: Provider.of<GameSettingsProvider>(context)),
+        ChangeNotifierProvider.value(
+            value: Provider.of<GameProgressProvider>(context)),
+        ChangeNotifierProvider.value(
+            value: Provider.of<GameSettingsProvider>(context)),
       ],
       child: Scaffold(
         appBar: AppBar(
@@ -768,7 +776,8 @@ class _GameScreenState extends State<GameScreen> {
                 ),
                 child: Consumer<GameProgressProvider>(
                   builder: (context, progress, child) {
-                    final completed = progress.getCompletedWords(widget.subject.id).length;
+                    final completed =
+                        progress.getCompletedWords(widget.subject.id).length;
                     return Text(
                       '$completed/${_words.length}',
                       style: const TextStyle(
@@ -827,13 +836,15 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                   ),
                 ),
-          
+
                 // Word display
                 Expanded(
                   flex: 1,
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(15),
@@ -848,12 +859,13 @@ class _GameScreenState extends State<GameScreen> {
                     child: LayoutBuilder(
                       builder: (context, constraints) {
                         final wordDisplay = _gameState.wordDisplay;
-                        
+
                         if (wordDisplay.length > 8) {
                           final midPoint = (wordDisplay.length / 2).ceil();
                           final firstLine = wordDisplay.take(midPoint).toList();
-                          final secondLine = wordDisplay.skip(midPoint).toList();
-                          
+                          final secondLine =
+                              wordDisplay.skip(midPoint).toList();
+
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -871,19 +883,22 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                   ),
                 ),
-          
+
                 // Attempts indicator
                 Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: widget.subject.color, width: 1),
+                          border:
+                              Border.all(color: widget.subject.color, width: 1),
                         ),
                         child: Text(
                           '${_gameState.remainingAttempts} attempts left',
@@ -897,7 +912,7 @@ class _GameScreenState extends State<GameScreen> {
                     ],
                   ),
                 ),
-          
+
                 // Keyboard
                 Expanded(
                   flex: 2,
@@ -919,41 +934,48 @@ class _GameScreenState extends State<GameScreen> {
                       children: [
                         // Hint and Next Buttons Header
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 4.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               // Hint Button
                               Consumer<GameSettingsProvider>(
                                 builder: (context, settings, child) {
-                                  
                                   return ElevatedButton.icon(
-                                    onPressed: !_gameOver && !_gameWon ? _showHintOptions : null,
-                                    icon: const Text('🪙', style: TextStyle(fontSize: 16)),
+                                    onPressed: !_gameOver && !_gameWon
+                                        ? _showHintOptions
+                                        : null,
+                                    icon: const Text('🪙',
+                                        style: TextStyle(fontSize: 16)),
                                     label: const Text(
                                       'Hint',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.amber.shade500,
                                       foregroundColor: Colors.white,
-                                      disabledBackgroundColor: Colors.grey.shade300,
+                                      disabledBackgroundColor:
+                                          Colors.grey.shade300,
                                       elevation: 2,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 8),
                                     ),
                                   );
                                 },
                               ),
-                              
+
                               // Restart Button
                               ElevatedButton.icon(
                                 onPressed: () {
                                   _initializeGame(forceNewWord: true);
                                 },
-                                icon: const Icon(Icons.skip_next_rounded, size: 20),
+                                icon: const Icon(Icons.skip_next_rounded,
+                                    size: 20),
                                 label: const Text(
                                   'Next',
                                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -965,13 +987,14 @@ class _GameScreenState extends State<GameScreen> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                   ),
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 8),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        
+
                         // Actual Keyboard
                         Expanded(
                           child: Keyboard(
@@ -1001,7 +1024,7 @@ class _GameScreenState extends State<GameScreen> {
           double boxWidth = 35.0;
           double boxHeight = 45.0;
           double fontSize = 24.0;
-          
+
           if (letters.length > 6) {
             boxWidth = 30.0;
             boxHeight = 40.0;
@@ -1009,18 +1032,20 @@ class _GameScreenState extends State<GameScreen> {
           }
 
           final isSpace = letter == ' ';
-          
+
           return Container(
             width: boxWidth,
             height: boxHeight,
             margin: const EdgeInsets.symmetric(horizontal: 2),
             decoration: BoxDecoration(
-              border: isSpace ? null : Border(
-                bottom: BorderSide(
-                  color: widget.subject.color,
-                  width: 3,
-                ),
-              ),
+              border: isSpace
+                  ? null
+                  : Border(
+                      bottom: BorderSide(
+                        color: widget.subject.color,
+                        width: 3,
+                      ),
+                    ),
             ),
             child: Center(
               child: Text(
@@ -1063,12 +1088,12 @@ class Keyboard extends StatelessWidget {
       builder: (context, constraints) {
         double buttonSize = (constraints.maxWidth - 20) / 10;
         buttonSize = buttonSize.clamp(25.0, 38.0);
-        
+
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: letters.asMap().entries.map((entry) {
             List<String> row = entry.value;
-            
+
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 3),
               child: Row(
@@ -1076,16 +1101,17 @@ class Keyboard extends StatelessWidget {
                 children: row.map((letter) {
                   final keyLabel = letter == 'SPACE' ? ' ' : letter;
                   final isUsed = usedLetters.contains(keyLabel);
-                  
+
                   double horizontalPadding = 1.5;
                   double width = buttonSize * 0.9;
-                  
+
                   if (letter == 'SPACE') {
                     width = buttonSize * 4; // Make space bar wider
                   }
-                  
+
                   return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: horizontalPadding),
                     child: Material(
                       color: isUsed ? Colors.grey.shade300 : subjectColor,
                       borderRadius: BorderRadius.circular(6),
@@ -1099,9 +1125,12 @@ class Keyboard extends StatelessWidget {
                           child: Text(
                             letter,
                             style: TextStyle(
-                              fontSize: letter == 'SPACE' ? buttonSize * 0.25 : buttonSize * 0.35,
+                              fontSize: letter == 'SPACE'
+                                  ? buttonSize * 0.25
+                                  : buttonSize * 0.35,
                               fontWeight: FontWeight.bold,
-                              color: isUsed ? Colors.grey.shade600 : Colors.white,
+                              color:
+                                  isUsed ? Colors.grey.shade600 : Colors.white,
                             ),
                           ),
                         ),
@@ -1132,9 +1161,10 @@ class GameState {
   });
 
   bool get isWordGuessed {
-    return word.toUpperCase().split('').every(
-      (letter) => letter == ' ' || guessedLetters.contains(letter)
-    );
+    return word
+        .toUpperCase()
+        .split('')
+        .every((letter) => letter == ' ' || guessedLetters.contains(letter));
   }
 
   bool get isGameOver => wrongAttempts >= maxAttempts;

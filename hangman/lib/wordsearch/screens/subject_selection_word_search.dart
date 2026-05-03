@@ -18,7 +18,7 @@ class WordSearchSubjectSelectionScreen extends StatelessWidget {
         elevation: 0,
         toolbarHeight: 70,
         title: const Text(
-          'Word Search Subjects',
+          'Word Search',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
         ),
         actions: [
@@ -35,7 +35,7 @@ class WordSearchSubjectSelectionScreen extends StatelessWidget {
                 _buildDifficultySection(
                   context,
                   'Easy',
-                  'Simple words and small grids',
+                  'Search Given words in Grid',
                   Icons.emoji_emotions_outlined,
                   Colors.green,
                   WordSearchData.easySubjects,
@@ -44,7 +44,7 @@ class WordSearchSubjectSelectionScreen extends StatelessWidget {
                 _buildDifficultySection(
                   context,
                   'Medium',
-                  'Challenging words and larger grids',
+                  'Search Related words of given words',
                   Icons.emoji_objects_outlined,
                   Colors.orange,
                   WordSearchData.mediumSubjects,
