@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hangman/services/game_progress.dart';
 import 'package:hangman/services/game_setting.dart';
 import 'package:hangman/audio/audio_manager.dart';
+import 'package:hangman/services/rating_service.dart';
 import 'package:provider/provider.dart';
 import 'package:hangman/components/hangman_drawing.dart';
 import 'package:hangman/components/coin_dialogs.dart';
@@ -289,22 +290,19 @@ class _GameScreenState extends State<GameScreen> {
         progressProvider.getCompletedWords(widget.subject.id);
     final isSubjectComplete = completedWords.length >= _words.length;
 
+    // Increment levels played for rating
+    RatingService.levelCompleted();
+
     if (isSubjectComplete) {
       _showGameCompleteDialog();
-      _checkRatingTrigger();
     } else {
       _showWordGuessedDialog();
     }
+    
+    // Check for rating dialog trigger
+    RatingService.checkAndShow(context);
   }
 
-  Future<void> _checkRatingTrigger() async {
-    final now = DateTime.now();
-    final playDuration = now.difference(_sessionStartTime);
-
-    if (playDuration.inSeconds >= 45) {
-      
-    }
-  }
 
   // Update dialog methods to use _handleWordCompletion instead of _showWordGuessedDialog
   // And update _showWordGuessedDialog to not call _nextWord directly

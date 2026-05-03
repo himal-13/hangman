@@ -9,6 +9,8 @@ import '../models/word_search_level.dart';
 import '../models/found_word.dart';
 import '../models/word_search_subject.dart';
 import 'package:hangman/services/game_progress.dart';
+import 'package:hangman/services/rating_service.dart';
+
 
 class WordSearchGameScreen extends StatefulWidget {
   final WordSearchLevel level;
@@ -338,6 +340,12 @@ class _WordSearchGameScreenState extends State<WordSearchGameScreen> {
     });
     
     AudioManager.playLevelComplete();
+    
+    // Increment levels played for rating
+    RatingService.levelCompleted();
+    
+    // Check for rating dialog trigger
+    RatingService.checkAndShow(context);
     
   
     

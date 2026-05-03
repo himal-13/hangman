@@ -4,6 +4,8 @@ import 'package:hangman/audio/audio_manager.dart';
 import 'package:hangman/services/wordle_progress.dart';
 import 'package:hangman/services/game_setting.dart';
 import 'package:hangman/components/coin_dialogs.dart';
+import 'package:hangman/services/rating_service.dart';
+
 import '../data/wordle_level_data.dart';
 import '../models/wordle_multi_game_state.dart';
 
@@ -44,6 +46,12 @@ class _GameContentState extends State<_GameContent> {
         _dialogShown = true;
         AudioManager.playLevelComplete();
         WordleProgress.unlockNextLevel(state.level.levelNumber);
+        
+        // Increment levels played for rating
+        RatingService.levelCompleted();
+        // Check for rating dialog trigger
+        RatingService.checkAndShow(context);
+
         _showWinDialog(context, state);
       }
     });
